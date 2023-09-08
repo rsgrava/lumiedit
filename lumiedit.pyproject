@@ -1,6 +1,7 @@
 {
     "files": [
         "mainwindow.py",
-        "form.ui"
+        "main.ui",
+        "tilesets.py"
     ]
 }
