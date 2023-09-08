@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
             self.project = Project(name)
             self.setWindowTitle("lumiedit - " + name)
             self.ui.project_label.setText("Current project: " + name)
+            self.enable_all_tabs()
         else:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Critical)
@@ -36,6 +37,10 @@ class MainWindow(QMainWindow):
 
     def new_tileset(self):
         ...
+
+    def enable_all_tabs(self):
+        for i in range(1, self.ui.tabs.count() + 1):
+            self.ui.tabs.setTabEnabled(i, True)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
