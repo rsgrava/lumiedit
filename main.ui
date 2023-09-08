@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>817</width>
+    <width>819</width>
     <height>584</height>
    </rect>
   </property>
@@ -32,6 +32,34 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <widget class="QWidget" name="general_tab">
+       <attribute name="title">
+        <string>General</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="new_project_btn">
+          <property name="text">
+           <string>New Project</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="load_project_btn">
+          <property name="text">
+           <string>Load Project</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="project_label">
+          <property name="text">
+           <string>Current Project: -</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="tilesets_tab">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -49,7 +77,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="new_tileset">
+           <widget class="QPushButton" name="new_tileset_btn">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -62,7 +90,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QListView" name="listView_2"/>
+           <widget class="QListView" name="tileset_list"/>
           </item>
          </layout>
         </item>
@@ -126,21 +154,21 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QRadioButton" name="radioButton_3">
+             <widget class="QRadioButton" name="tiles_btn">
               <property name="text">
                <string>Tiles</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton_2">
+             <widget class="QRadioButton" name="collision_btn">
               <property name="text">
                <string>Collision</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButton">
+             <widget class="QRadioButton" name="events_btn">
               <property name="text">
                <string>Events</string>
               </property>
@@ -178,7 +206,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="frame_2">
+           <widget class="QFrame" name="tile_selection">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -188,14 +216,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBox_2">
+           <widget class="QCheckBox" name="vflip_box">
             <property name="text">
              <string>Vertical Flip</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="hflip_box">
             <property name="text">
              <string>Horizontal Flip</string>
             </property>

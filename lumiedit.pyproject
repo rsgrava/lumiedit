@@ -2,6 +2,7 @@
     "files": [
         "mainwindow.py",
         "main.ui",
-        "tilesets.py"
+        "tilesets.py",
+        "project.py"
     ]
 }
