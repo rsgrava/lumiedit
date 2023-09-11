@@ -42,3 +42,9 @@ class Project:
         self.ob_tilesets[new_name] = self.ob_tilesets[old_name]
         del self.ob_tilesets[old_name]
         print(self.ob_tilesets)
+
+    def delete_bg_tileset(self, ui):
+        del self.bg_tilesets[ui.bg_tileset_list.currentItem().text()]
+
+    def delete_ob_tileset(self, ui):
+        del self.ob_tilesets[ui.ob_tileset_list.currentItem().text()]

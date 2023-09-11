@@ -20,6 +20,8 @@ class MainWindow(QMainWindow):
         self.ui.new_project_btn.clicked.connect(self.new_project)
         self.ui.new_bg_tileset_btn.clicked.connect(self.new_bg_tileset)
         self.ui.new_ob_tileset_btn.clicked.connect(self.new_ob_tileset)
+        self.ui.delete_bg_tileset_btn.clicked.connect(self.delete_bg_tileset)
+        self.ui.delete_ob_tileset_btn.clicked.connect(self.delete_ob_tileset)
 
         self.tileset_scene = TilesetScene(self.ui)
         self.ui.tileset_view.setScene(self.tileset_scene)
@@ -86,6 +88,19 @@ class MainWindow(QMainWindow):
 
     def rename_ob_tileset(self, item):
        self.project.rename_ob_tileset(item.text())
+
+    def delete_bg_tileset(self):
+        self.project.delete_bg_tileset(self.ui)
+        self.ui.bg_tileset_list.takeItem(self.ui.bg_tileset_list.currentRow())
+        self.ui.bg_tileset_list.clearSelection()
+        self.ui.tileset_view.setScene(TilesetScene(self.ui))
+
+    def delete_ob_tileset(self):
+        self.project.delete_ob_tileset(self.ui)
+        self.ui.ob_tileset_list.takeItem(self.ui.ob_tileset_list.currentRow())
+        self.ui.ob_tileset_list.clearSelection()
+        self.ui.tileset_view.scene().clear()
+        self.ui.tileset_view.setScene(TilesetScene(self.ui))
 
     def select_bg_tileset(self):
         self.refresh_tileview("bg")
