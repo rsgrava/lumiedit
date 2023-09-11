@@ -18,11 +18,13 @@ class MainWindow(QMainWindow):
 
         self.ui.new_project_btn.clicked.connect(self.new_project)
         self.ui.new_bg_tileset_btn.clicked.connect(self.new_bg_tileset)
+        self.ui.new_ob_tileset_btn.clicked.connect(self.new_ob_tileset)
 
         self.tileset_scene = TilesetScene(self.ui)
         self.ui.tileset_view.setScene(self.tileset_scene)
 
         self.ui.bg_tileset_list.currentRowChanged.connect(self.select_bg_tileset)
+        self.ui.ob_tileset_list.currentRowChanged.connect(self.select_ob_tileset)
 
         self.ui.subtile_view.setScene(QGraphicsScene(0, 0, 64, 64))
         self.ui.palette_view.setScene(QGraphicsScene(0, 0, 128, 32))
@@ -73,10 +75,18 @@ class MainWindow(QMainWindow):
                 msg.exec()
 
     def select_bg_tileset(self):
+        self.refresh_tileview("bg")
         self.ui.ob_tileset_list.clearSelection()
-        self.ui.subtile_view.scene().clear()
+
+    def select_ob_tileset(self):
+        self.refresh_tileview("ob")
+        self.ui.bg_tileset_list.clearSelection()
+
+    def refresh_tileview(self, type):
         self.tileset_scene.clear()
         self.tileset_scene.set_rect()
+
+        self.ui.subtile_view.scene().clear()
         self.ui.palette_view.scene().clear()
         self.ui.palette0_view.scene().clear()
         self.ui.palette1_view.scene().clear()
@@ -86,12 +96,23 @@ class MainWindow(QMainWindow):
         self.ui.palette5_view.scene().clear()
         self.ui.palette6_view.scene().clear()
         self.ui.palette7_view.scene().clear()
+
         self.ui.tile_label.setText("Tile: -")
         self.ui.subtile_label.setText("Subtile: -")
         self.ui.palette_label.setText("Palette: -")
-        current_item = self.ui.bg_tileset_list.currentItem()
+
+        match type:
+            case "bg":
+                current_item = self.ui.bg_tileset_list.currentItem()
+            case "ob":
+                current_item = self.ui.ob_tileset_list.currentItem()
+
         if current_item:
-            tileset = self.project.bg_tilesets[current_item.text()]
+            match type:
+                case "bg":
+                    tileset = self.project.bg_tilesets[current_item.text()]
+                case "ob":
+                    tileset = self.project.ob_tilesets[current_item.text()]
             self.tileset_scene.tileset = tileset
             self.tileset_scene.setSceneRect(0, 0, tileset.width * 4, tileset.height * 4)
             for tile in tileset.tiles:

@@ -5,7 +5,7 @@ from PySide6.QtGui import QPixmap, QColor
 from tile import Tile, get_subtile_palette
 
 class Tileset:
-    def __init__(self, filename, padding):
+    def __init__(self, filename, type, padding):
         self.filename = filename
         self.tiles = []
         self.palettes = []
@@ -55,6 +55,8 @@ class Tileset:
         for palette in self.palettes:
             while len(palette) < 4:
                 palette.insert(0, (QColor(0, 0, 0, 0)))
+            if type == "ob":
+                palette[0] = QColor(0, 0, 0, 0)
 
     def get_tile_idx(self, tile_x, tile_y):
         return int(tile_y * self.tile_width + tile_x)
