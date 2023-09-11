@@ -38,6 +38,9 @@ class TilesetScene(QGraphicsScene):
             if self.ui.palette_view.scene() == None:
                 self.ui.palette_view.setScene(QGraphicsScene(0, 0, 128, 32))
 
+            self.ui.subtile_view.scene().clear()
+            self.ui.palette_view.scene().clear()
+
             subtile = self.tileset.get_subtile(subtile_x, subtile_y)
             subtile_idx = self.tileset.get_subtile_idx(subtile_x, subtile_y)
             tile_idx = self.tileset.get_tile_idx(subtile_x // 2, subtile_y // 2)
