@@ -2,7 +2,9 @@
     "files": [
         "mainwindow.py",
         "main.ui",
-        "tilesets.py",
-        "project.py"
+        "project.py",
+        "tileset.py",
+        "tile.py",
+        "tileset_scene.py"
     ]
 }
