@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
     def new_project(self):
         name, ok = QInputDialog().getText(self, "Insert Project Name", "Project name:")
         if ok and name:
+            self.project = Project()
             self.project.new(name)
             self.ui.bg_tileset_list.clear()
             self.ui.ob_tileset_list.clear()
