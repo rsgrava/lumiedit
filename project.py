@@ -29,3 +29,16 @@ class Project:
         if name in self.ob_tilesets:
             raise Exception("Tileset with this name already loaded!")
         self.ob_tilesets[name] = Tileset(filename, "ob", False)
+
+    def rename_bg_tileset(self, new_name):
+        old_items = self.bg_tilesets.keys()
+        old_name = list(set(old_items) - set([new_name]))[0]
+        self.bg_tilesets[new_name] = self.bg_tilesets[old_name]
+        del self.bg_tilesets[old_name]
+
+    def rename_ob_tileset(self, new_name):
+        old_items = self.ob_tilesets.keys()
+        old_name = list(set(old_items) - set([new_name]))[0]
+        self.ob_tilesets[new_name] = self.ob_tilesets[old_name]
+        del self.ob_tilesets[old_name]
+        print(self.ob_tilesets)

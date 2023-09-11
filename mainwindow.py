@@ -1,8 +1,9 @@
 # This Python file uses the following encoding: utf-8
 import sys, os
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox, QFileDialog, QGraphicsScene
-from PySide6.QtGui import QBrush, QColor
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox, QFileDialog, QGraphicsScene, QListWidgetItem
+from PySide6.QtGui import QBrush
 
 from ui_main import Ui_MainWindow
 from project import Project
@@ -25,6 +26,8 @@ class MainWindow(QMainWindow):
 
         self.ui.bg_tileset_list.currentRowChanged.connect(self.select_bg_tileset)
         self.ui.ob_tileset_list.currentRowChanged.connect(self.select_ob_tileset)
+        self.ui.bg_tileset_list.itemChanged.connect(self.rename_bg_tileset)
+        self.ui.ob_tileset_list.itemChanged.connect(self.rename_ob_tileset)
 
         self.ui.subtile_view.setScene(QGraphicsScene(0, 0, 64, 64))
         self.ui.palette_view.setScene(QGraphicsScene(0, 0, 128, 32))
@@ -53,7 +56,9 @@ class MainWindow(QMainWindow):
         if filename:
             try:
                 self.project.new_bg_tileset(filename)
-                self.ui.bg_tileset_list.addItem(os.path.splitext(filename)[0].split('/')[-1])
+                item = QListWidgetItem(os.path.splitext(filename)[0].split('/')[-1])
+                item.setFlags(item.flags() | Qt.ItemIsEditable)
+                self.ui.bg_tileset_list.addItem(item)
             except Exception as e:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Critical)
@@ -66,13 +71,21 @@ class MainWindow(QMainWindow):
         if filename:
             try:
                 self.project.new_ob_tileset(filename)
-                self.ui.ob_tileset_list.addItem(os.path.splitext(filename)[0].split('/')[-1])
+                item = QListWidgetItem(os.path.splitext(filename)[0].split('/')[-1])
+                item.setFlags(item.flags() | Qt.ItemIsEditable)
+                self.ui.ob_tileset_list.addItem(item)
             except Exception as e:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Critical)
                 msg.setText(str(e))
                 msg.setWindowTitle("Error")
                 msg.exec()
+
+    def rename_bg_tileset(self, item):
+       self.project.rename_bg_tileset(item.text())
+
+    def rename_ob_tileset(self, item):
+       self.project.rename_ob_tileset(item.text())
 
     def select_bg_tileset(self):
         self.refresh_tileview("bg")
