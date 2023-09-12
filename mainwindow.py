@@ -3,7 +3,6 @@ import sys, os
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox, QFileDialog, QGraphicsScene, QListWidgetItem
-from PySide6.QtGui import QBrush
 
 from ui_main import Ui_MainWindow
 from project import Project
@@ -32,15 +31,6 @@ class MainWindow(QMainWindow):
         self.ui.ob_tileset_list.itemChanged.connect(self.rename_ob_tileset)
 
         self.ui.subtile_view.setScene(QGraphicsScene(0, 0, 64, 64))
-        self.ui.palette_view.setScene(QGraphicsScene(0, 0, 128, 32))
-        self.ui.palette0_view.setScene(QGraphicsScene(0, 0, 128, 32))
-        self.ui.palette1_view.setScene(QGraphicsScene(0, 0, 128, 32))
-        self.ui.palette2_view.setScene(QGraphicsScene(0, 0, 128, 32))
-        self.ui.palette3_view.setScene(QGraphicsScene(0, 0, 128, 32))
-        self.ui.palette4_view.setScene(QGraphicsScene(0, 0, 128, 32))
-        self.ui.palette5_view.setScene(QGraphicsScene(0, 0, 128, 32))
-        self.ui.palette6_view.setScene(QGraphicsScene(0, 0, 128, 32))
-        self.ui.palette7_view.setScene(QGraphicsScene(0, 0, 128, 32))
 
     def new_project(self):
         name, ok = QInputDialog().getText(self, "Insert Project Name", "Project name:")
@@ -158,84 +148,21 @@ class MainWindow(QMainWindow):
                 item.setPos(tile.x * 4, tile.y * 4)
                 self.tileset_scene.addRect(tile.x * 4, tile.y * 4, 16 * 4, 16 * 4)
 
-            brush = QBrush(tileset.palettes[0][0])
-            self.ui.palette0_view.scene().addRect(0, 0, 32, 32, brush=brush)
-            brush.setColor(tileset.palettes[0][1])
-            self.ui.palette0_view.scene().addRect(32, 0, 32, 32, brush=brush)
-            brush.setColor(tileset.palettes[0][2])
-            self.ui.palette0_view.scene().addRect(64, 0, 32, 32, brush=brush)
-            brush.setColor(tileset.palettes[0][3])
-            self.ui.palette0_view.scene().addRect(96, 0, 32, 32, brush=brush)
-
+            self.ui.palette0_view.set_palette(tileset.palettes[0])
             if len(tileset.palettes) > 1:
-                brush.setColor(tileset.palettes[1][0])
-                self.ui.palette1_view.scene().addRect(0, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[1][1])
-                self.ui.palette1_view.scene().addRect(32, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[1][2])
-                self.ui.palette1_view.scene().addRect(64, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[1][3])
-                self.ui.palette1_view.scene().addRect(96, 0, 32, 32, brush=brush)
-
+                self.ui.palette1_view.set_palette(tileset.palettes[1])
             if len(tileset.palettes) > 2:
-                brush.setColor(tileset.palettes[2][0])
-                self.ui.palette2_view.scene().addRect(0, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[2][1])
-                self.ui.palette2_view.scene().addRect(32, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[2][2])
-                self.ui.palette2_view.scene().addRect(64, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[2][3])
-                self.ui.palette2_view.scene().addRect(96, 0, 32, 32, brush=brush)
-
+                self.ui.palette2_view.set_palette(tileset.palettes[2])
             if len(tileset.palettes) > 3:
-                brush.setColor(tileset.palettes[3][0])
-                self.ui.palette3_view.scene().addRect(0, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[3][1])
-                self.ui.palette3_view.scene().addRect(32, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[3][2])
-                self.ui.palette3_view.scene().addRect(64, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[3][3])
-                self.ui.palette3_view.scene().addRect(96, 0, 32, 32, brush=brush)
-
+                self.ui.palette3_view.set_palette(tileset.palettes[3])
             if len(tileset.palettes) > 4:
-                brush.setColor(tileset.palettes[4][0])
-                self.ui.palette4_view.scene().addRect(0, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[4][1])
-                self.ui.palette4_view.scene().addRect(32, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[4][2])
-                self.ui.palette4_view.scene().addRect(64, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[4][3])
-                self.ui.palette4_view.scene().addRect(96, 0, 32, 32, brush=brush)
-
+                self.ui.palette4_view.set_palette(tileset.palettes[4])
             if len(tileset.palettes) > 5:
-                brush.setColor(tileset.palettes[5][0])
-                self.ui.palette5_view.scene().addRect(0, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[5][1])
-                self.ui.palette5_view.scene().addRect(32, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[5][2])
-                self.ui.palette5_view.scene().addRect(64, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[5][3])
-                self.ui.palette5_view.scene().addRect(96, 0, 32, 32, brush=brush)
-
+                self.ui.palette5_view.set_palette(tileset.palettes[5])
             if len(tileset.palettes) > 6:
-                brush.setColor(tileset.palettes[6][0])
-                self.ui.palette6_view.scene().addRect(0, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[6][1])
-                self.ui.palette6_view.scene().addRect(32, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[6][2])
-                self.ui.palette6_view.scene().addRect(64, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[6][3])
-                self.ui.palette6_view.scene().addRect(96, 0, 32, 32, brush=brush)
-
+                self.ui.palette6_view.set_palette(tileset.palettes[6])
             if len(tileset.palettes) > 7:
-                brush.setColor(tileset.palettes[7][0])
-                self.ui.palette7_view.scene().addRect(0, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[7][1])
-                self.ui.palette7_view.scene().addRect(32, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[7][2])
-                self.ui.palette7_view.scene().addRect(64, 0, 32, 32, brush=brush)
-                brush.setColor(tileset.palettes[7][3])
-                self.ui.palette7_view.scene().addRect(96, 0, 32, 32, brush=brush)
+                self.ui.palette7_view.set_palette(tileset.palettes[7])
 
     def enable_all_tabs(self):
         for i in range(1, self.ui.tabs.count() + 1):

@@ -6,6 +6,7 @@
         "tileset.py",
         "tile.py",
         "tileset_scene.py",
-        "palette.py"
+        "palette.py",
+        "palette_view.py"
     ]
 }

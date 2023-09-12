@@ -39,7 +39,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="general_tab">
        <attribute name="title">
@@ -399,7 +399,7 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
-                 <widget class="QGraphicsView" name="palette_view">
+                 <widget class="PaletteView" name="palette_view">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
                     <horstretch>0</horstretch>
@@ -496,7 +496,7 @@
                </widget>
               </item>
               <item row="0" column="3">
-               <widget class="QGraphicsView" name="palette4_view">
+               <widget class="PaletteView" name="palette4_view">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -518,7 +518,7 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QGraphicsView" name="palette1_view">
+               <widget class="PaletteView" name="palette1_view">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -548,7 +548,7 @@
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QGraphicsView" name="palette5_view">
+               <widget class="PaletteView" name="palette5_view">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -564,7 +564,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QGraphicsView" name="palette0_view">
+               <widget class="PaletteView" name="palette0_view">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -593,7 +593,7 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QGraphicsView" name="palette2_view">
+               <widget class="PaletteView" name="palette2_view">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -609,7 +609,7 @@
                </widget>
               </item>
               <item row="2" column="3">
-               <widget class="QGraphicsView" name="palette6_view">
+               <widget class="PaletteView" name="palette6_view">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -639,7 +639,7 @@
                </widget>
               </item>
               <item row="3" column="1">
-               <widget class="QGraphicsView" name="palette3_view">
+               <widget class="PaletteView" name="palette3_view">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -655,7 +655,7 @@
                </widget>
               </item>
               <item row="3" column="3">
-               <widget class="QGraphicsView" name="palette7_view">
+               <widget class="PaletteView" name="palette7_view">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                   <horstretch>0</horstretch>
@@ -843,6 +843,13 @@
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PaletteView</class>
+   <extends>QGraphicsView</extends>
+   <header>palette_view</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
