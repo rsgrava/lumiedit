@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
-from PySide6.QtGui import QColor
+from palette import Palette
 
 class Tile:
     def __init__(self, image, x, y):
@@ -17,7 +17,7 @@ class Tile:
         subtiles.append(self.get_subtile(3))
         for subtile in subtiles:
             palette = get_subtile_palette(subtile)
-            if ele_not_in_list(palette, palettes):
+            if palette not in palettes:
                 palettes.append(palette)
         return palettes
 
@@ -32,27 +32,12 @@ class Tile:
             case 3:
                 return self.image.copy(8, 8, 8, 8).toImage()
 
-
 def get_subtile_palette(subtile):
-    palette = []
+    palette = Palette()
     for y in range(0, 8):
         for x in range(0, 8):
             color = subtile.pixelColor(x, y)
-            if ele_not_in_list(color, palette):
+            if color not in palette:
                 palette.append(color)
-    if len(palette) > 4:
-        raise Exception("Tile palette with more than 4 colors!")
-    palette.sort(key=lambda x: rgb_to_luma(x), reverse=True)
+    palette.sort()
     return palette
-
-
-def ele_not_in_list(color, palette):
-    for other in palette:
-        if color == other:
-            return False
-    return True
-
-def rgb_to_luma(color):
-    if color.alpha() == 0:
-        return 100000000
-    return 0.2126 * color.red() + 0.7152 * color.green() + 0.0722 * color.blue()

@@ -30,15 +30,9 @@ class Tileset:
                 i = i + 1
 
         for tile in self.tiles:
-            tile_palettes = tile.get_palettes()
-            for palette in tile_palettes:
-                self.palettes.append(palette)
-
-        filtered_palettes = []
-        for palette in self.palettes:
-            if palette not in filtered_palettes:
-                filtered_palettes.append(palette)
-        self.palettes = filtered_palettes
+            for palette in tile.get_palettes():
+                if palette not in self.palettes:
+                    self.palettes.append(palette)
 
         subpalettes = []
         for i in range(0, len(self.palettes)):
@@ -53,10 +47,10 @@ class Tileset:
                 self.palettes.remove(subpalette)
 
         for palette in self.palettes:
-            while len(palette) < 4:
-                palette.insert(0, (QColor(0, 0, 0, 0)))
-            if type == "ob":
-                palette[0] = QColor(0, 0, 0, 0)
+            palette.pad()
+
+        if len(self.palettes) > 8:
+            raise Exception("More than 8 palettes in tileset!")
 
     def get_tile_idx(self, tile_x, tile_y):
         return int(tile_y * self.tile_width + tile_x)

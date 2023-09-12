@@ -5,6 +5,7 @@
         "project.py",
         "tileset.py",
         "tile.py",
-        "tileset_scene.py"
+        "tileset_scene.py",
+        "palette.py"
     ]
 }
