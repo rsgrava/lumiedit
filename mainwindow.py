@@ -84,10 +84,14 @@ class MainWindow(QMainWindow):
                 msg.exec()
 
     def rename_bg_tileset(self, item):
-       self.project.rename_bg_tileset(item.text())
+        self.ui.bg_tileset_list.blockSignals(True)
+        self.project.rename_bg_tileset(item)
+        self.ui.bg_tileset_list.blockSignals(False)
 
     def rename_ob_tileset(self, item):
-       self.project.rename_ob_tileset(item.text())
+        self.ui.ob_tileset_list.blockSignals(True)
+        self.project.rename_ob_tileset(item)
+        self.ui.ob_tileset_list.blockSignals(False)
 
     def delete_bg_tileset(self):
         self.project.delete_bg_tileset(self.ui)

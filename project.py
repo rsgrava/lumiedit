@@ -8,6 +8,7 @@ class Project:
     def __init__(self):
         self.bg_tilesets = {}
         self.ob_tilesets = {}
+        self.maps = {}
 
     def new(self, name):
         self.name = name
@@ -30,18 +31,25 @@ class Project:
             raise Exception("Tileset with this name already loaded!")
         self.ob_tilesets[name] = Tileset(filename, "ob", False)
 
-    def rename_bg_tileset(self, new_name):
+    def rename_bg_tileset(self, item):
+        new_name = item.text()
         old_items = self.bg_tilesets.keys()
         old_name = list(set(old_items) - set([new_name]))[0]
+        if new_name in old_items:
+            item.setText(old_name)
+            return
         self.bg_tilesets[new_name] = self.bg_tilesets[old_name]
         del self.bg_tilesets[old_name]
 
-    def rename_ob_tileset(self, new_name):
+    def rename_ob_tileset(self, item):
+        new_name = item.text()
         old_items = self.ob_tilesets.keys()
         old_name = list(set(old_items) - set([new_name]))[0]
+        if new_name in old_items:
+            item.setText(old_name)
+            return
         self.ob_tilesets[new_name] = self.ob_tilesets[old_name]
         del self.ob_tilesets[old_name]
-        print(self.ob_tilesets)
 
     def delete_bg_tileset(self, ui):
         del self.bg_tilesets[ui.bg_tileset_list.currentItem().text()]
