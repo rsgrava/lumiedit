@@ -142,11 +142,11 @@ class MainWindow(QMainWindow):
                     tileset = self.project.ob_tilesets[current_item.text()]
             self.tileset_scene.tileset = tileset
             self.tileset_scene.setSceneRect(0, 0, tileset.width * 4, tileset.height * 4)
-            for tile in tileset.tiles:
-                item = self.tileset_scene.addPixmap(tile.image)
+            for metatile in tileset.metatiles:
+                item = self.tileset_scene.addPixmap(metatile.image)
                 item.setScale(4 * item.scale())
-                item.setPos(tile.x * 4, tile.y * 4)
-                self.tileset_scene.addRect(tile.x * 4, tile.y * 4, 16 * 4, 16 * 4)
+                item.setPos(metatile.x * 4, metatile.y * 4)
+                self.tileset_scene.addRect(metatile.x * 4, metatile.y * 4, 16 * 4, 16 * 4)
 
             self.ui.palette0_view.set_palette(tileset.palettes[0])
             if len(tileset.palettes) > 1:

@@ -2,7 +2,7 @@
 
 from palette import Palette
 
-class Tile:
+class MetaTile:
     def __init__(self, image, x, y):
         self.image = image
         self.x = x
