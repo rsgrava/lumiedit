@@ -94,17 +94,22 @@ class MainWindow(QMainWindow):
         self.ui.ob_tileset_list.blockSignals(False)
 
     def delete_bg_tileset(self):
+        if self.ui.bg_tileset_list.currentItem() == None:
+            return
         self.project.delete_bg_tileset(self.ui)
         self.ui.bg_tileset_list.takeItem(self.ui.bg_tileset_list.currentRow())
         self.ui.bg_tileset_list.clearSelection()
-        self.ui.tileset_view.setScene(TilesetScene(self.ui))
+        self.tileset_scene = TilesetScene(self.ui)
+        self.ui.tileset_view.setScene(self.tileset_scene)
 
     def delete_ob_tileset(self):
+        if self.ui.ob_tileset_list.currentItem() == None:
+            return
         self.project.delete_ob_tileset(self.ui)
         self.ui.ob_tileset_list.takeItem(self.ui.ob_tileset_list.currentRow())
         self.ui.ob_tileset_list.clearSelection()
-        self.ui.tileset_view.scene().clear()
-        self.ui.tileset_view.setScene(TilesetScene(self.ui))
+        self.tileset_scene = TilesetScene(self.ui)
+        self.ui.tileset_view.setScene(self.tileset_scene)
 
     def select_bg_tileset(self):
         self.refresh_tileview("bg")
