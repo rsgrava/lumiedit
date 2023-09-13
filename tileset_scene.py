@@ -66,8 +66,8 @@ class TilesetScene(QGraphicsScene):
             self.ui.fliph_label.setText("Flip Hor: " + str(tile.flip_h))
             self.ui.flipv_label.setText("Flip Ver: " + str(tile.flip_v))
 
-            tile_def = self.tileset.tile_defs[tile.id]
-            pixmap = QPixmap.fromImage(tile_def.pixmap.toImage().mirrored(tile.flip_h, tile.flip_v))
+            tiledef = self.tileset.tiledefs[tile.id]
+            pixmap = QPixmap.fromImage(tiledef.pixmap.toImage().mirrored(tile.flip_h, tile.flip_v))
             item = self.ui.tile_view.scene().addPixmap(pixmap)
             item.setScale(8)
 

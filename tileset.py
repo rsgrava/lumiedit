@@ -2,7 +2,7 @@
 
 from PySide6.QtGui import QPixmap
 
-from tile_def import TileDef
+from tiledef import Tiledef
 
 class Tileset:
     def __init__(self, filename):
@@ -14,19 +14,19 @@ class Tileset:
         if self.pixmap.width() % 16 != 0 or self.pixmap.height() % 16 != 0:
             raise Exception("Invalid pixmap size!")
 
-        self.tile_defs = []
+        self.tiledefs = []
         i = 0
         for y in range(0, self.pixmap.height(), 8):
             for x in range(0, self.pixmap.width(), 8):
-                tile_def = TileDef(self.pixmap.copy(x, y, 8, 8))
-                if tile_def not in self.tile_defs:
-                    self.tile_defs.append(tile_def)
+                tiledef = Tiledef(self.pixmap.copy(x, y, 8, 8))
+                if tiledef not in self.tiledefs:
+                    self.tiledefs.append(tiledef)
                 if i > 256:
                     raise Exception("Too many tiles! (max 256)")
                 i = i + 1
 
         self.palettes = []
-        for tile in self.tile_defs:
+        for tile in self.tiledefs:
             palette = tile.get_palette()
             if palette not in self.palettes:
                 self.palettes.append(palette)

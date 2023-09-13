@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 
 from tile import Tile
-from tile_def import TileDef
+from tiledef import Tiledef
 
 class Tilemap:
     def __init__(self, width, height):
@@ -15,11 +15,11 @@ class Tilemap:
         tilemap = Tilemap(tileset.pixmap.width() // 8, tileset.pixmap.height() // 8)
         for y in range(0, tileset.pixmap.height(), 8):
             for x in range(0, tileset.pixmap.width(), 8):
-                tile_def = TileDef(tileset.pixmap.copy(x, y, 8, 8))
-                for i in range(0, len(tileset.tile_defs)):
-                    if tile_def == tileset.tile_defs[i]:
-                        mirrored = tile_def.is_mirror(tileset.tile_defs[i])
-                        palette = tile_def.get_palette()
+                tiledef = Tiledef(tileset.pixmap.copy(x, y, 8, 8))
+                for i in range(0, len(tileset.tiledefs)):
+                    if tiledef == tileset.tiledefs[i]:
+                        mirrored = tiledef.is_mirror(tileset.tiledefs[i])
+                        palette = tiledef.get_palette()
                         for j in range(0, len(tileset.palettes)):
                             if all(color in tileset.palettes[j] for color in palette):
                                 palette = j

@@ -2,7 +2,7 @@
 
 from palette import Palette
 
-class TileDef:
+class Tiledef:
     def __init__(self, pixmap):
         self.pixmap = pixmap
 
