@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QGraphicsScene, QGraphicsRectItem
 from PySide6.QtGui import QPen, QPixmap
 from PySide6.QtCore import Qt
 
-from tile_map import TileMap
+from tilemap import Tilemap
 
 class TilesetScene(QGraphicsScene):
     def __init__(self, ui):
@@ -58,7 +58,7 @@ class TilesetScene(QGraphicsScene):
             self.ui.tile_view.scene().clear()
             self.ui.palette_view.scene().clear()
 
-            tile = self.tile_map[tile_x][tile_y]
+            tile = self.tilemap[tile_x][tile_y]
 
             self.ui.metatile_label.setText("Metatile: " + str(tile_y // 2 * (self.tileset.pixmap.width() // 16) + tile_x // 2))
             self.ui.tile_label.setText("Tile: " + str(tile.id))
@@ -76,7 +76,7 @@ class TilesetScene(QGraphicsScene):
 
     def setTileset(self, tileset):
         self.tileset = tileset
-        self.tile_map = TileMap.from_tileset(tileset)
+        self.tilemap = Tilemap.from_tileset(tileset)
         self.setSceneRect(0, 0, tileset.pixmap.width() * 4, tileset.pixmap.height() * 4)
         item = self.addPixmap(tileset.pixmap)
         item.setScale(4)

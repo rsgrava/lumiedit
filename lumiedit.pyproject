@@ -8,7 +8,7 @@
         "palette.py",
         "palette_view.py",
         "tile_def.py",
-        "tile_map.py",
+        "tilemap.py",
         "tile.py"
     ]
 }

@@ -3,7 +3,7 @@
 from tile import Tile
 from tile_def import TileDef
 
-class TileMap:
+class Tilemap:
     def __init__(self, width, height):
         self.tiles = [[Tile() for j in range(0, height)] for i in range(0, width)]
 
@@ -12,7 +12,7 @@ class TileMap:
 
     @classmethod
     def from_tileset(cls, tileset):
-        tile_map = TileMap(tileset.pixmap.width() // 8, tileset.pixmap.height() // 8)
+        tilemap = Tilemap(tileset.pixmap.width() // 8, tileset.pixmap.height() // 8)
         for y in range(0, tileset.pixmap.height(), 8):
             for x in range(0, tileset.pixmap.width(), 8):
                 tile_def = TileDef(tileset.pixmap.copy(x, y, 8, 8))
@@ -24,6 +24,6 @@ class TileMap:
                             if all(color in tileset.palettes[j] for color in palette):
                                 palette = j
                                 break
-                        tile_map[x // 8][y // 8] = Tile(i, palette, mirrored[0], mirrored[1])
+                        tilemap[x // 8][y // 8] = Tile(i, palette, mirrored[0], mirrored[1])
                         break
-        return tile_map
+        return tilemap
