@@ -22,15 +22,14 @@ class MainWindow(QMainWindow):
         self.ui.delete_bg_tileset_btn.clicked.connect(self.delete_bg_tileset)
         self.ui.delete_ob_tileset_btn.clicked.connect(self.delete_ob_tileset)
 
-        self.tileset_scene = TilesetScene(self.ui)
-        self.ui.tileset_view.setScene(self.tileset_scene)
-
         self.ui.bg_tileset_list.currentRowChanged.connect(self.select_bg_tileset)
         self.ui.ob_tileset_list.currentRowChanged.connect(self.select_ob_tileset)
         self.ui.bg_tileset_list.itemChanged.connect(self.rename_bg_tileset)
         self.ui.ob_tileset_list.itemChanged.connect(self.rename_ob_tileset)
 
-        self.ui.subtile_view.setScene(QGraphicsScene(0, 0, 64, 64))
+        self.ui.tile_view.setScene(QGraphicsScene(0, 0, 64, 64))
+        self.tileset_scene = TilesetScene(self.ui)
+        self.ui.tileset_view.setScene(self.tileset_scene)
 
     def new_project(self):
         name, ok = QInputDialog().getText(self, "Insert Project Name", "Project name:")
@@ -111,58 +110,18 @@ class MainWindow(QMainWindow):
 
     def refresh_tileview(self, type):
         self.tileset_scene.clear()
-        self.tileset_scene.set_rect()
-
-        self.ui.subtile_view.scene().clear()
-        self.ui.palette_view.scene().clear()
-        self.ui.palette0_view.scene().clear()
-        self.ui.palette1_view.scene().clear()
-        self.ui.palette2_view.scene().clear()
-        self.ui.palette3_view.scene().clear()
-        self.ui.palette4_view.scene().clear()
-        self.ui.palette5_view.scene().clear()
-        self.ui.palette6_view.scene().clear()
-        self.ui.palette7_view.scene().clear()
-
-        self.ui.tile_label.setText("Tile: -")
-        self.ui.subtile_label.setText("Subtile: -")
-        self.ui.palette_label.setText("Palette: -")
-
         match type:
             case "bg":
                 current_item = self.ui.bg_tileset_list.currentItem()
             case "ob":
                 current_item = self.ui.ob_tileset_list.currentItem()
-
         if current_item:
             match type:
                 case "bg":
                     tileset = self.project.bg_tilesets[current_item.text()]
                 case "ob":
                     tileset = self.project.ob_tilesets[current_item.text()]
-            self.tileset_scene.tileset = tileset
-            self.tileset_scene.setSceneRect(0, 0, tileset.width * 4, tileset.height * 4)
-            for metatile in tileset.metatiles:
-                item = self.tileset_scene.addPixmap(metatile.image)
-                item.setScale(4 * item.scale())
-                item.setPos(metatile.x * 4, metatile.y * 4)
-                self.tileset_scene.addRect(metatile.x * 4, metatile.y * 4, 16 * 4, 16 * 4)
-
-            self.ui.palette0_view.set_palette(tileset.palettes[0])
-            if len(tileset.palettes) > 1:
-                self.ui.palette1_view.set_palette(tileset.palettes[1])
-            if len(tileset.palettes) > 2:
-                self.ui.palette2_view.set_palette(tileset.palettes[2])
-            if len(tileset.palettes) > 3:
-                self.ui.palette3_view.set_palette(tileset.palettes[3])
-            if len(tileset.palettes) > 4:
-                self.ui.palette4_view.set_palette(tileset.palettes[4])
-            if len(tileset.palettes) > 5:
-                self.ui.palette5_view.set_palette(tileset.palettes[5])
-            if len(tileset.palettes) > 6:
-                self.ui.palette6_view.set_palette(tileset.palettes[6])
-            if len(tileset.palettes) > 7:
-                self.ui.palette7_view.set_palette(tileset.palettes[7])
+            self.tileset_scene.setTileset(tileset)
 
     def enable_all_tabs(self):
         for i in range(1, self.ui.tabs.count() + 1):

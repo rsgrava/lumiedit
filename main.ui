@@ -161,19 +161,6 @@
               </property>
              </widget>
             </item>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
            </layout>
           </item>
           <item>
@@ -229,19 +216,6 @@
                <string>Delete</string>
               </property>
              </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
             </item>
            </layout>
           </item>
@@ -303,7 +277,7 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QGraphicsView" name="subtile_view">
+                 <widget class="QGraphicsView" name="tile_view">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
                     <horstretch>0</horstretch>
@@ -352,16 +326,16 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QLabel" name="tile_label">
+                   <widget class="QLabel" name="metatile_label">
                     <property name="text">
-                     <string>Tile: -</string>
+                     <string>Metatile: -</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="subtile_label">
+                   <widget class="QLabel" name="tile_label">
                     <property name="text">
-                     <string>Subtile: -</string>
+                     <string>Tile: -</string>
                     </property>
                    </widget>
                   </item>
@@ -373,6 +347,20 @@
                    </widget>
                   </item>
                   <item>
+                   <widget class="QLabel" name="fliph_label">
+                    <property name="text">
+                     <string>Flip Hor: -</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="flipv_label">
+                    <property name="text">
+                     <string>Flip Ver: -</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
                    <spacer name="verticalSpacer_4">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
@@ -380,7 +368,7 @@
                     <property name="sizeHint" stdset="0">
                      <size>
                       <width>20</width>
-                      <height>20</height>
+                      <height>40</height>
                      </size>
                     </property>
                    </spacer>
@@ -392,7 +380,7 @@
               <item>
                <widget class="QLabel" name="label">
                 <property name="text">
-                 <string>Subtile Palette</string>
+                 <string>Tile Palette</string>
                 </property>
                </widget>
               </item>
@@ -433,7 +421,7 @@
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
-                    <width>40</width>
+                    <width>60</width>
                     <height>20</height>
                    </size>
                   </property>

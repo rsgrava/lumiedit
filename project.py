@@ -20,7 +20,7 @@ class Project:
         name = os.path.splitext(filename)[0].split('/')[-1]
         if name in self.bg_tilesets:
             raise Exception("Tileset with this name already loaded!")
-        self.bg_tilesets[name] = Tileset(filename, "bg", True)
+        self.bg_tilesets[name] = Tileset(filename)
 
     def new_ob_tileset(self, filename):
         for tileset in self.ob_tilesets:
@@ -29,7 +29,7 @@ class Project:
         name = os.path.splitext(filename)[0].split('/')[-1]
         if name in self.ob_tilesets:
             raise Exception("Tileset with this name already loaded!")
-        self.ob_tilesets[name] = Tileset(filename, "ob", False)
+        self.ob_tilesets[name] = Tileset(filename)
 
     def rename_bg_tileset(self, item):
         new_name = item.text()

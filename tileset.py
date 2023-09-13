@@ -1,39 +1,35 @@
 # This Python file uses the following encoding: utf-8
 
-from PySide6.QtGui import QPixmap, QColor
+from PySide6.QtGui import QPixmap
 
-from metatile import MetaTile, get_subtile_palette
+from tile_def import TileDef
 
 class Tileset:
-    def __init__(self, filename, type, padding):
+    def __init__(self, filename):
         self.filename = filename
-        self.metatiles = []
-        self.palettes = []
-
-        image = QPixmap()
-        ok = image.load(filename)
+        self.pixmap = QPixmap()
+        ok = self.pixmap.load(filename)
         if not ok:
-            raise Exception("Failed to load image!")
+            raise Exception("Failed to load pixmap!")
+        if self.pixmap.width() % 16 != 0 or self.pixmap.height() % 16 != 0:
+            raise Exception("Invalid pixmap size!")
 
-        self.width = image.width()
-        self.height = image.height()
-        self.metatile_width = self.width // 16
-        if self.width % 16 != 0 or self.height % 16 != 0:
-            raise Exception("Invalid image size!")
-
+        self.tile_defs = []
         i = 0
-        for y in range(0, image.height(), 16):
-            for x in range(0, image.width(), 16):
-                self.metatiles.append(MetaTile(image.copy(x, y, 16, 16), x, y))
-                if i > 64:
-                    raise Exception("Too many metatiles! (max 64)")
+        for y in range(0, self.pixmap.height(), 8):
+            for x in range(0, self.pixmap.width(), 8):
+                tile_def = TileDef(self.pixmap.copy(x, y, 8, 8))
+                if tile_def not in self.tile_defs:
+                    self.tile_defs.append(tile_def)
+                if i > 256:
+                    raise Exception("Too many tiles! (max 256)")
                 i = i + 1
 
-        for metatile in self.metatiles:
-            for palette in metatile.get_palettes():
-                if palette not in self.palettes:
-                    self.palettes.append(palette)
-
+        self.palettes = []
+        for tile in self.tile_defs:
+            palette = tile.get_palette()
+            if palette not in self.palettes:
+                self.palettes.append(palette)
         subpalettes = []
         for i in range(0, len(self.palettes)):
             if len(self.palettes[i]) < 4:
@@ -45,26 +41,7 @@ class Tileset:
         for subpalette in subpalettes:
             if subpalette in self.palettes:
                 self.palettes.remove(subpalette)
-
         for palette in self.palettes:
             palette.pad()
-
         if len(self.palettes) > 8:
             raise Exception("More than 8 palettes in tileset!")
-
-    def get_metatile_idx(self, metatile_x, metatile_y):
-        return int(metatile_y * self.metatile_width + metatile_x)
-
-    def get_subtile_idx(self, subtile_x, subtile_y):
-        return int(subtile_x % 2 + 2 * (subtile_y % 2))
-
-    def get_subtile(self, subtile_x, subtile_y):
-        metatile = self.metatiles[self.get_metatile_idx(subtile_x // 2, subtile_y // 2)]
-        return metatile.get_subtile(self.get_subtile_idx(subtile_x, subtile_y))
-
-    def get_subtile_palette_idx(self, subtile_x, subtile_y):
-        subtile = self.get_subtile(subtile_x, subtile_y)
-        palette = get_subtile_palette(subtile)
-        for i in range(0, len(self.palettes)):
-            if all(color in self.palettes[i] for color in palette):
-                return i

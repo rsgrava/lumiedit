@@ -4,9 +4,11 @@
         "main.ui",
         "project.py",
         "tileset.py",
-        "metatile.py",
         "tileset_scene.py",
         "palette.py",
-        "palette_view.py"
+        "palette_view.py",
+        "tile_def.py",
+        "tile_map.py",
+        "tile.py"
     ]
 }
