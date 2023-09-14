@@ -113,6 +113,17 @@ class Project:
         self.maps[name] = Map(tileset)
         self.unsaved_changes = True
 
+    def rename_map(self, item):
+        new_name = item.text()
+        old_items = self.maps.keys()
+        old_name = list(set(old_items) - set([new_name]))[0]
+        if new_name in old_items:
+            item.setText(old_name)
+            return
+        self.maps[new_name] = self.maps[old_name]
+        del self.maps[old_name]
+        self.unsaved_changes = True
+
     def delete_map(self, name):
         del self.maps[name]
         self.unsaved_changes = True

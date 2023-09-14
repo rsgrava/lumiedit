@@ -228,7 +228,10 @@ class MainWindow(QMainWindow):
             msg.exec()
 
     def rename_map(self, item):
-        ...
+        self.ui.map_list.blockSignals(True)
+        self.project.rename_map(item)
+        self.ui.map_list.blockSignals(False)
+
 
     def delete_map(self):
         if self.ui.map_list.currentItem() == None:
