@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         self.project = Project()
         if self.cfg["last_project"]:
             try:
-                self.project.load(self.cfg["last_project"])
+                self.project.load(self.ui, self.cfg["last_project"])
                 self.set_proj_labels()
                 self.enable_all_tabs()
             except Exception as e:
@@ -90,7 +90,7 @@ class MainWindow(QMainWindow):
         dir = QFileDialog().getExistingDirectory(self, "Choose Directory", os.path.expanduser("~/Documents/lumiedit/projects/"), QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if dir:
             try:
-                self.project.load(dir)
+                self.project.load(ui, dir)
             except Exception as e:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Critical)
@@ -113,8 +113,9 @@ class MainWindow(QMainWindow):
         filename = QFileDialog.getOpenFileName(caption="Open Tileset")[0]
         if filename:
             try:
-                self.project.new_tileset(type, filename)
-                item = QListWidgetItem(os.path.splitext(filename)[0].split('/')[-1])
+                name = os.path.splitext(filename)[0].split('/')[-1]
+                self.project.new_tileset(type, name,  filename)
+                item = QListWidgetItem(name)
                 item.setFlags(item.flags() | Qt.ItemIsEditable)
                 if type == "bg":
                     self.ui.bg_tileset_list.addItem(item)

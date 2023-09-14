@@ -2,6 +2,9 @@
 
 import os, json
 
+from PySide6.QtWidgets import QListWidgetItem
+from PySide6.QtCore import Qt
+
 from tileset import Tileset
 
 class Project:
@@ -22,18 +25,50 @@ class Project:
         self.unsaved_changes = False
         self.save()
 
-    def load(self, dir):
+    def load(self, ui, dir):
         data = json.loads(open(dir + "/project.json", "r").read())
+
         self.name = data["name"]
         self.dir = dir
+
+        for name, filename in zip(data["bg_tilesets"]["names"], data["bg_tilesets"]["filenames"]):
+            self.new_tileset("bg", name, filename)
+            item = QListWidgetItem(name)
+            item.setFlags(item.flags() | Qt.ItemIsEditable)
+            ui.bg_tileset_list.addItem(item)
+
+        for name, filename in zip(data["ob_tilesets"]["names"], data["ob_tilesets"]["filenames"]):
+            self.new_tileset("ob", name, filename)
+            item = QListWidgetItem(name)
+            item.setFlags(item.flags() | Qt.ItemIsEditable)
+            ui.ob_tileset_list.addItem(item)
+
         self.initialized = True
+        self.unsaved_changes = False
 
     def save(self):
         data = {}
-        data["name"] = self.name
-        open(self.dir + "/project.json", "w").write(json.dumps(data))
 
-    def new_tileset(self, type, filename):
+        data["name"] = self.name
+
+        filenames = []
+        for bg in self.bg_tilesets:
+            filenames.append(self.bg_tilesets[bg].filename)
+        data["bg_tilesets"] = {}
+        data["bg_tilesets"]["names"] = list(self.bg_tilesets.keys())
+        data["bg_tilesets"]["filenames"] = filenames
+
+        filenames = []
+        for ob in self.ob_tilesets:
+            filenames.append(self.ob_tilesets[ob].filename)
+        data["ob_tilesets"] = {}
+        data["ob_tilesets"]["names"] = list(self.ob_tilesets.keys())
+        data["ob_tilesets"]["filenames"] = filenames
+
+        open(self.dir + "/project.json", "w").write(json.dumps(data))
+        self.unsaved_changes = False
+
+    def new_tileset(self, type, name, filename):
         if type == "bg":
             list = self.bg_tilesets
         elif type == "ob":
@@ -41,7 +76,6 @@ class Project:
         for tileset in list:
             if list[tileset].filename == filename:
                 raise Exception("Tileset already loaded!")
-        name = os.path.splitext(filename)[0].split('/')[-1]
         if name in list:
             raise Exception("Tileset with this name already loaded!")
         list[name] = Tileset(filename)
