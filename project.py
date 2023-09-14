@@ -9,6 +9,7 @@ class Project:
         self.name = None
         self.dir = None
         self.initialized = False
+        self.unsaved_changes = False
         self.data = {}
         self.bg_tilesets = {}
         self.ob_tilesets = {}
@@ -18,6 +19,7 @@ class Project:
         self.name = name
         self.dir = dir
         self.initialized = True
+        self.unsaved_changes = False
         self.save()
 
     def load(self, dir):
@@ -39,6 +41,7 @@ class Project:
         if name in self.bg_tilesets:
             raise Exception("Tileset with this name already loaded!")
         self.bg_tilesets[name] = Tileset(filename)
+        self.unsaved_changes = True
 
     def new_ob_tileset(self, filename):
         for tileset in self.ob_tilesets:
@@ -48,6 +51,7 @@ class Project:
         if name in self.ob_tilesets:
             raise Exception("Tileset with this name already loaded!")
         self.ob_tilesets[name] = Tileset(filename)
+        self.unsaved_changes = True
 
     def rename_bg_tileset(self, item):
         new_name = item.text()
@@ -58,6 +62,7 @@ class Project:
             return
         self.bg_tilesets[new_name] = self.bg_tilesets[old_name]
         del self.bg_tilesets[old_name]
+        self.unsaved_changes = True
 
     def rename_ob_tileset(self, item):
         new_name = item.text()
@@ -68,9 +73,12 @@ class Project:
             return
         self.ob_tilesets[new_name] = self.ob_tilesets[old_name]
         del self.ob_tilesets[old_name]
+        self.unsaved_changes = True
 
     def delete_bg_tileset(self, ui):
         del self.bg_tilesets[ui.bg_tileset_list.currentItem().text()]
+        self.unsaved_changes = True
 
     def delete_ob_tileset(self, ui):
         del self.ob_tilesets[ui.ob_tileset_list.currentItem().text()]
+        self.unsaved_changes = True

@@ -196,7 +196,18 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         self.write_cfg()
-        self.save_project()
+        if self.project.unsaved_changes:
+            msg = QMessageBox()
+            msg.setText("Do you want to save the project?")
+            msg.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel)
+            msg.setDefaultButton(QMessageBox.Save)
+            match msg.exec():
+                case QMessageBox.Save:
+                    self.save_project()
+                case QMessageBox.Cancel:
+                    event.ignore()
+                    return
+        event.accept()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
