@@ -5,6 +5,7 @@ import os, json
 from PySide6.QtWidgets import QListWidgetItem
 from PySide6.QtCore import Qt
 
+from map import Map
 from tileset import Tileset
 
 class Project:
@@ -25,6 +26,7 @@ class Project:
         self.unsaved_changes = False
         os.makedirs(self.dir + "/tilesets/bg")
         os.makedirs(self.dir + "/tilesets/ob")
+        os.makedirs(self.dir + "/maps")
         self.save()
 
     def load(self, ui, dir):
@@ -104,3 +106,8 @@ class Project:
         elif type == "ob":
             del self.ob_tilesets[ui.ob_tileset_list.currentItem().text()]
         self.unsaved_changes = True
+
+    def new_map(self, name, tileset):
+        if name in self.maps:
+            raise Exception("Map with this name already exists!")
+        self.maps[name] = Map(tileset)

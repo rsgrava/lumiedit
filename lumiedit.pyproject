@@ -11,6 +11,9 @@
         "tilemap.py",
         "tile.py",
         "new_proj_window.ui",
-        "new_proj_window.py"
+        "new_proj_window.py",
+        "map.py",
+        "new_map_window.ui",
+        "new_map_window.py"
     ]
 }

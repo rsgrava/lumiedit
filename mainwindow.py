@@ -5,6 +5,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox, QFileDialog, QGraphicsScene, QListWidgetItem
 
 from ui_main import Ui_MainWindow
+from new_map_window import NewMapWindow
 from new_proj_window import NewProjWindow
 from project import Project
 from tileset_scene import TilesetScene
@@ -49,11 +50,16 @@ class MainWindow(QMainWindow):
         self.ui.new_ob_tileset_btn.clicked.connect(self.new_ob_tileset)
         self.ui.delete_bg_tileset_btn.clicked.connect(self.delete_bg_tileset)
         self.ui.delete_ob_tileset_btn.clicked.connect(self.delete_ob_tileset)
+        self.ui.new_map_btn.clicked.connect(self.new_map)
+        self.ui.delete_map_btn.clicked.connect(self.delete_map)
 
         self.ui.bg_tileset_list.currentRowChanged.connect(self.select_bg_tileset)
         self.ui.ob_tileset_list.currentRowChanged.connect(self.select_ob_tileset)
+        self.ui.map_list.currentRowChanged.connect(self.select_map)
+
         self.ui.bg_tileset_list.itemChanged.connect(self.rename_bg_tileset)
         self.ui.ob_tileset_list.itemChanged.connect(self.rename_ob_tileset)
+        self.ui.map_list.itemChanged.connect(self.rename_map)
 
         self.ui.tile_view.setScene(QGraphicsScene(0, 0, 64, 64))
         self.tileset_scene = TilesetScene(self.ui)
@@ -67,6 +73,11 @@ class MainWindow(QMainWindow):
         self.ui.proj_name_label.setText("Current project: " + self.project.name)
         self.ui.proj_dir_label.setText("Project directory: " + self.project.dir)
 
+    def clear_project(self):
+        self.ui.bg_tileset_list.clear()
+        self.ui.ob_tileset_list.clear()
+        self.ui.map_list.clear()
+
     def new_project(self):
         try:
             ok, name, dir = NewProjWindow().get_text()
@@ -75,8 +86,7 @@ class MainWindow(QMainWindow):
             self.project = Project()
             self.project.new(name, dir)
             self.cfg["last_project"] = dir
-            self.ui.bg_tileset_list.clear()
-            self.ui.ob_tileset_list.clear()
+            self.clear_project()
             self.set_proj_labels()
             self.enable_all_tabs()
         except Exception as e:
@@ -90,7 +100,10 @@ class MainWindow(QMainWindow):
         dir = QFileDialog().getExistingDirectory(self, "Choose Directory", os.path.expanduser("~/Documents/lumiedit/projects/"), QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if dir:
             try:
-                self.project.load(ui, dir)
+                self.clear_project()
+                self.project.load(self.ui, dir)
+                self.set_proj_labels()
+                self.enable_all_tabs()
             except Exception as e:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Critical)
@@ -195,6 +208,32 @@ class MainWindow(QMainWindow):
     def enable_all_tabs(self):
         for i in range(1, self.ui.tabs.count() + 1):
             self.ui.tabs.setTabEnabled(i, True)
+
+    def new_map(self):
+        window = NewMapWindow()
+        window.setTilesets(self.project.bg_tilesets)
+        try:
+            ok, name, tileset = window.getInput()
+            if ok and name and tileset:
+                self.project.new_map(name, tileset)
+                item = QListWidgetItem(name)
+                item.setFlags(item.flags() | Qt.ItemIsEditable)
+                self.ui.map_list.addItem(item)
+        except Exception as e:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText(str(e))
+            msg.setWindowTitle("Error")
+            msg.exec()
+
+    def rename_map(self, item):
+        ...
+
+    def delete_map(self):
+        ...
+
+    def select_map(self):
+        ...
 
     def closeEvent(self, event):
         self.write_cfg()

@@ -39,7 +39,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="general_tab">
        <attribute name="title">
@@ -771,6 +771,9 @@
               <property name="text">
                <string>Tiles</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
               <attribute name="buttonGroup">
                <string notr="true">map_tile_type_selection</string>
               </attribute>
@@ -863,6 +866,10 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="map_tile_type_selection"/>
+  <buttongroup name="map_tile_type_selection">
+   <property name="exclusive">
+    <bool>false</bool>
+   </property>
+  </buttongroup>
  </buttongroups>
 </ui>
