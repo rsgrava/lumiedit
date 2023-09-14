@@ -23,6 +23,8 @@ class Project:
         self.dir = dir
         self.initialized = True
         self.unsaved_changes = False
+        os.makedirs(self.dir + "/tilesets/bg")
+        os.makedirs(self.dir + "/tilesets/ob")
         self.save()
 
     def load(self, ui, dir):

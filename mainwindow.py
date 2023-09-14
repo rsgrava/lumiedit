@@ -110,11 +110,14 @@ class MainWindow(QMainWindow):
                 msg.exec()
 
     def new_tileset(self, type):
-        filename = QFileDialog.getOpenFileName(caption="Open Tileset")[0]
+        if type == "bg":
+            filename = QFileDialog.getOpenFileName(caption="Open Tileset", dir=self.project.dir + "/tilesets/bg")[0]
+        elif type == "ob":
+            filename = QFileDialog.getOpenFileName(caption="Open Tileset", dir=self.project.dir + "/tilesets/ob")[0]
         if filename:
             try:
                 name = os.path.splitext(filename)[0].split('/')[-1]
-                self.project.new_tileset(type, name,  filename)
+                self.project.new_tileset(type, name, filename)
                 item = QListWidgetItem(name)
                 item.setFlags(item.flags() | Qt.ItemIsEditable)
                 if type == "bg":

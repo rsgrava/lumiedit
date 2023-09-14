@@ -771,6 +771,9 @@
               <property name="text">
                <string>Tiles</string>
               </property>
+              <attribute name="buttonGroup">
+               <string notr="true">map_tile_type_selection</string>
+              </attribute>
              </widget>
             </item>
             <item>
@@ -778,6 +781,9 @@
               <property name="text">
                <string>Collision</string>
               </property>
+              <attribute name="buttonGroup">
+               <string notr="true">map_tile_type_selection</string>
+              </attribute>
              </widget>
             </item>
             <item>
@@ -785,6 +791,9 @@
               <property name="text">
                <string>Events</string>
               </property>
+              <attribute name="buttonGroup">
+               <string notr="true">map_tile_type_selection</string>
+              </attribute>
              </widget>
             </item>
            </layout>
@@ -853,4 +862,7 @@
  </customwidgets>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="map_tile_type_selection"/>
+ </buttongroups>
 </ui>
