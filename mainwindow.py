@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-import sys, os
+import sys, os, json
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox, QFileDialog, QGraphicsScene, QListWidgetItem
@@ -15,9 +15,36 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowTitle("lumiedit")
+
+        os.makedirs(os.path.expanduser("~/Documents/lumiedit"), exist_ok=True)
+        os.makedirs(os.path.expanduser("~/Documents/lumiedit/projects"), exist_ok=True)
+        try:
+            self.cfg = json.loads(open(os.path.expanduser("~/Documents/lumiedit/cfg.json"), "r").read())
+        except:
+            self.cfg = {
+                "last_project": None
+            }
+            self.write_cfg()
+
         self.project = Project()
+        if self.cfg["last_project"]:
+            try:
+                self.project.load(self.cfg["last_project"])
+                self.set_proj_labels()
+                self.enable_all_tabs()
+            except Exception as e:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Critical)
+                msg.setText(
+                    "Failed to read last project: " + self.cfg["last_project"] + "\n\n" +
+                    str(e)
+                )
+                msg.setWindowTitle("Error")
+                msg.exec()
 
         self.ui.new_project_btn.clicked.connect(self.new_project)
+        self.ui.load_project_btn.clicked.connect(self.load_project)
+        self.ui.save_project_btn.clicked.connect(self.save_project)
         self.ui.new_bg_tileset_btn.clicked.connect(self.new_bg_tileset)
         self.ui.new_ob_tileset_btn.clicked.connect(self.new_ob_tileset)
         self.ui.delete_bg_tileset_btn.clicked.connect(self.delete_bg_tileset)
@@ -32,18 +59,25 @@ class MainWindow(QMainWindow):
         self.tileset_scene = TilesetScene(self.ui)
         self.ui.tileset_view.setScene(self.tileset_scene)
 
+    def write_cfg(self):
+        open(os.path.expanduser("~/Documents/lumiedit/cfg.json"), "w").write(json.dumps(self.cfg))
+
+    def set_proj_labels(self):
+        self.setWindowTitle("lumiedit - " + self.project.name)
+        self.ui.proj_name_label.setText("Current project: " + self.project.name)
+        self.ui.proj_dir_label.setText("Project directory: " + self.project.dir)
+
     def new_project(self):
         try:
             ok, name, dir = NewProjWindow().get_text()
             if not ok:
                 return
             self.project = Project()
-            self.project.new(name)
+            self.project.new(name, dir)
+            self.cfg["last_project"] = dir
             self.ui.bg_tileset_list.clear()
             self.ui.ob_tileset_list.clear()
-            self.setWindowTitle("lumiedit - " + name)
-            self.ui.proj_name_label.setText("Current project: " + name)
-            self.ui.proj_dir_label.setText("Project directory: " + dir)
+            self.set_proj_labels()
             self.enable_all_tabs()
         except Exception as e:
             msg = QMessageBox()
@@ -52,7 +86,28 @@ class MainWindow(QMainWindow):
             msg.setWindowTitle("Error")
             msg.exec()
 
+    def load_project(self):
+        dir = QFileDialog().getExistingDirectory(self, "Choose Directory", os.path.expanduser("~/Documents/lumiedit/projects/"), QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+        if dir:
+            try:
+                self.project.load(dir)
+            except Exception as e:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Critical)
+                msg.setText("Failed to load project!\n\n" + str(e))
+                msg.setWindowTitle("Error")
+                msg.exec()
 
+    def save_project(self):
+        if self.project.initialized:
+            try:
+                self.project.save()
+            except Exception as e:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Critical)
+                msg.setText("Failed to save project!\n\n" + str(e))
+                msg.setWindowTitle("Error")
+                msg.exec()
 
     def new_bg_tileset(self):
         filename = QFileDialog.getOpenFileName(caption="Open Tileset")[0]
@@ -138,6 +193,10 @@ class MainWindow(QMainWindow):
     def enable_all_tabs(self):
         for i in range(1, self.ui.tabs.count() + 1):
             self.ui.tabs.setTabEnabled(i, True)
+
+    def closeEvent(self, event):
+        self.write_cfg()
+        self.save_project()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

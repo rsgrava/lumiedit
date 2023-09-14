@@ -1,17 +1,35 @@
 # This Python file uses the following encoding: utf-8
 
-import os
+import os, json
 
 from tileset import Tileset
 
 class Project:
     def __init__(self):
+        self.name = None
+        self.dir = None
+        self.initialized = False
+        self.data = {}
         self.bg_tilesets = {}
         self.ob_tilesets = {}
         self.maps = {}
 
-    def new(self, name):
+    def new(self, name, dir):
         self.name = name
+        self.dir = dir
+        self.initialized = True
+        self.save()
+
+    def load(self, dir):
+        data = json.loads(open(dir + "/project.json", "r").read())
+        self.name = data["name"]
+        self.dir = dir
+        self.initialized = True
+
+    def save(self):
+        data = {}
+        data["name"] = self.name
+        open(self.dir + "/project.json", "w").write(json.dumps(data))
 
     def new_bg_tileset(self, filename):
         for tileset in self.bg_tilesets:

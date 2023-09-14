@@ -11,7 +11,7 @@ class NewProjWindow(QDialog):
         self.ui = Ui_NewProjWindow()
         self.ui.setupUi(self)
         self.ui.dir_btn.clicked.connect(self.choose_dir)
-        self.ui.dir_edit.setText(os.path.expanduser("~/Documents/lumiedit/Project"))
+        self.ui.dir_edit.setText(os.path.expanduser("~/Documents/lumiedit/projects/Project"))
 
     def get_text(self):
         ok = super().exec()
@@ -28,7 +28,6 @@ class NewProjWindow(QDialog):
         return True, name, dir
 
     def choose_dir(self):
-        dir = os.path.expanduser("~/Documents")
-        print(dir)
-        dir = QFileDialog.getExistingDirectory(self, "Choose Directory", dir + "lumiedit/Project", QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
-        self.ui.dir_edit.setText(dir)
+        dir = QFileDialog.getExistingDirectory(self, "Choose Directory", os.path.expanduser("~/Documents/lumiedit/projects/Project"), QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+        if dir:
+            self.ui.dir_edit.setText(dir)
