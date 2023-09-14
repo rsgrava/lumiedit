@@ -102,6 +102,7 @@ class MainWindow(QMainWindow):
             try:
                 self.clear_project()
                 self.project.load(self.ui, dir)
+                self.cfg["last_project"] = dir
                 self.set_proj_labels()
                 self.enable_all_tabs()
             except Exception as e:
@@ -230,7 +231,11 @@ class MainWindow(QMainWindow):
         ...
 
     def delete_map(self):
-        ...
+        if self.ui.map_list.currentItem() == None:
+            return
+        self.project.delete_map(self.ui.map_list.currentItem().text())
+        self.ui.map_list.takeItem(self.ui.map_list.currentRow())
+        self.ui.map_list.clearSelection()
 
     def select_map(self):
         ...

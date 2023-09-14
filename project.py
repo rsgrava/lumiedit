@@ -111,3 +111,8 @@ class Project:
         if name in self.maps:
             raise Exception("Map with this name already exists!")
         self.maps[name] = Map(tileset)
+        self.unsaved_changes = True
+
+    def delete_map(self, name):
+        del self.maps[name]
+        self.unsaved_changes = True
