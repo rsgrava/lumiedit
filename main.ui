@@ -868,7 +868,7 @@
  <buttongroups>
   <buttongroup name="map_tile_type_selection">
    <property name="exclusive">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </buttongroup>
  </buttongroups>

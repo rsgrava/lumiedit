@@ -214,9 +214,9 @@ class MainWindow(QMainWindow):
         window = NewMapWindow()
         window.setTilesets(self.project.bg_tilesets)
         try:
-            ok, name, tileset = window.getInput()
-            if ok and name and tileset:
-                self.project.new_map(name, tileset)
+            ok, name, tileset, width, height = window.getInput()
+            if ok:
+                self.project.new_map(name, tileset, width, height)
                 item = QListWidgetItem(name)
                 item.setFlags(item.flags() | Qt.ItemIsEditable)
                 self.ui.map_list.addItem(item)

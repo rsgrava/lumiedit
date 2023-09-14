@@ -107,10 +107,10 @@ class Project:
             del self.ob_tilesets[name]
         self.unsaved_changes = True
 
-    def new_map(self, name, tileset):
+    def new_map(self, name, tileset, width, height):
         if name in self.maps:
             raise Exception("Map with this name already exists!")
-        self.maps[name] = Map(tileset)
+        self.maps[name] = Map(tileset, width, height)
         self.unsaved_changes = True
 
     def rename_map(self, item):
