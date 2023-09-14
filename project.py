@@ -33,52 +33,38 @@ class Project:
         data["name"] = self.name
         open(self.dir + "/project.json", "w").write(json.dumps(data))
 
-    def new_bg_tileset(self, filename):
-        for tileset in self.bg_tilesets:
-            if self.bg_tilesets[tileset].filename == filename:
+    def new_tileset(self, type, filename):
+        if type == "bg":
+            list = self.bg_tilesets
+        elif type == "ob":
+            list = self.ob_tilesets
+        for tileset in list:
+            if list[tileset].filename == filename:
                 raise Exception("Tileset already loaded!")
         name = os.path.splitext(filename)[0].split('/')[-1]
-        if name in self.bg_tilesets:
+        if name in list:
             raise Exception("Tileset with this name already loaded!")
-        self.bg_tilesets[name] = Tileset(filename)
+        list[name] = Tileset(filename)
         self.unsaved_changes = True
 
-    def new_ob_tileset(self, filename):
-        for tileset in self.ob_tilesets:
-            if self.ob_tilesets[tileset].filename == filename:
-                raise Exception("Tileset already loaded!")
-        name = os.path.splitext(filename)[0].split('/')[-1]
-        if name in self.ob_tilesets:
-            raise Exception("Tileset with this name already loaded!")
-        self.ob_tilesets[name] = Tileset(filename)
-        self.unsaved_changes = True
-
-    def rename_bg_tileset(self, item):
+    def rename_tileset(self, type, item):
+        if type == "bg":
+            lst = self.bg_tilesets
+        elif type == "ob":
+            lst = self.ob_tilesets
         new_name = item.text()
-        old_items = self.bg_tilesets.keys()
+        old_items = lst.keys()
         old_name = list(set(old_items) - set([new_name]))[0]
         if new_name in old_items:
             item.setText(old_name)
             return
-        self.bg_tilesets[new_name] = self.bg_tilesets[old_name]
-        del self.bg_tilesets[old_name]
+        lst[new_name] = lst[old_name]
+        del lst[old_name]
         self.unsaved_changes = True
 
-    def rename_ob_tileset(self, item):
-        new_name = item.text()
-        old_items = self.ob_tilesets.keys()
-        old_name = list(set(old_items) - set([new_name]))[0]
-        if new_name in old_items:
-            item.setText(old_name)
-            return
-        self.ob_tilesets[new_name] = self.ob_tilesets[old_name]
-        del self.ob_tilesets[old_name]
-        self.unsaved_changes = True
-
-    def delete_bg_tileset(self, ui):
-        del self.bg_tilesets[ui.bg_tileset_list.currentItem().text()]
-        self.unsaved_changes = True
-
-    def delete_ob_tileset(self, ui):
-        del self.ob_tilesets[ui.ob_tileset_list.currentItem().text()]
+    def delete_tileset(self, type, ui):
+        if type == "bg":
+            del self.bg_tilesets[ui.bg_tileset_list.currentItem().text()]
+        elif type == "ob":
+            del self.ob_tilesets[ui.ob_tileset_list.currentItem().text()]
         self.unsaved_changes = True

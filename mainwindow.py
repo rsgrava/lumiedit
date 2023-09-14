@@ -109,14 +109,17 @@ class MainWindow(QMainWindow):
                 msg.setWindowTitle("Error")
                 msg.exec()
 
-    def new_bg_tileset(self):
+    def new_tileset(self, type):
         filename = QFileDialog.getOpenFileName(caption="Open Tileset")[0]
         if filename:
             try:
-                self.project.new_bg_tileset(filename)
+                self.project.new_tileset(type, filename)
                 item = QListWidgetItem(os.path.splitext(filename)[0].split('/')[-1])
                 item.setFlags(item.flags() | Qt.ItemIsEditable)
-                self.ui.bg_tileset_list.addItem(item)
+                if type == "bg":
+                    self.ui.bg_tileset_list.addItem(item)
+                elif type == "ob":
+                    self.ui.ob_tileset_list.addItem(item)
             except Exception as e:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Critical)
@@ -124,48 +127,43 @@ class MainWindow(QMainWindow):
                 msg.setWindowTitle("Error")
                 msg.exec()
 
+    def new_bg_tileset(self):
+        self.new_tileset("bg")
+
     def new_ob_tileset(self):
-        filename = QFileDialog.getOpenFileName(caption="Open Tileset")[0]
-        if filename:
-            try:
-                self.project.new_ob_tileset(filename)
-                item = QListWidgetItem(os.path.splitext(filename)[0].split('/')[-1])
-                item.setFlags(item.flags() | Qt.ItemIsEditable)
-                self.ui.ob_tileset_list.addItem(item)
-            except Exception as e:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Critical)
-                msg.setText(str(e))
-                msg.setWindowTitle("Error")
-                msg.exec()
+        self.new_tileset("ob")
 
     def rename_bg_tileset(self, item):
         self.ui.bg_tileset_list.blockSignals(True)
-        self.project.rename_bg_tileset(item)
+        self.project.rename_tileset("bg", item)
         self.ui.bg_tileset_list.blockSignals(False)
 
     def rename_ob_tileset(self, item):
         self.ui.ob_tileset_list.blockSignals(True)
-        self.project.rename_ob_tileset(item)
+        self.project.rename_tileset("ob", item)
         self.ui.ob_tileset_list.blockSignals(False)
+
+    def delete_tileset(self, type):
+        if type == "bg":
+            self.project.delete_tileset("bg", self.ui)
+            list = self.ui.bg_tileset_list
+        elif type == "ob":
+            self.project.delete_tileset("ob", self.ui)
+            list = self.ui.ob_tileset_list
+        list.takeItem(list.currentRow())
+        list.clearSelection()
+        self.tileset_scene = TilesetScene(self.ui)
+        self.ui.tileset_view.setScene(self.tileset_scene)
 
     def delete_bg_tileset(self):
         if self.ui.bg_tileset_list.currentItem() == None:
             return
-        self.project.delete_bg_tileset(self.ui)
-        self.ui.bg_tileset_list.takeItem(self.ui.bg_tileset_list.currentRow())
-        self.ui.bg_tileset_list.clearSelection()
-        self.tileset_scene = TilesetScene(self.ui)
-        self.ui.tileset_view.setScene(self.tileset_scene)
+        self.delete_tileset("bg")
 
     def delete_ob_tileset(self):
         if self.ui.ob_tileset_list.currentItem() == None:
             return
-        self.project.delete_ob_tileset(self.ui)
-        self.ui.ob_tileset_list.takeItem(self.ui.ob_tileset_list.currentRow())
-        self.ui.ob_tileset_list.clearSelection()
-        self.tileset_scene = TilesetScene(self.ui)
-        self.ui.tileset_view.setScene(self.tileset_scene)
+        self.delete_tileset("ob")
 
     def select_bg_tileset(self):
         self.refresh_tileview("bg")
