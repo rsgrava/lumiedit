@@ -100,11 +100,11 @@ class Project:
         del lst[old_name]
         self.unsaved_changes = True
 
-    def delete_tileset(self, type, ui):
+    def delete_tileset(self, type, name):
         if type == "bg":
-            del self.bg_tilesets[ui.bg_tileset_list.currentItem().text()]
+            del self.bg_tilesets[name]
         elif type == "ob":
-            del self.ob_tilesets[ui.ob_tileset_list.currentItem().text()]
+            del self.ob_tilesets[name]
         self.unsaved_changes = True
 
     def new_map(self, name, tileset):

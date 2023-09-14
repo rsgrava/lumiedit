@@ -163,11 +163,11 @@ class MainWindow(QMainWindow):
 
     def delete_tileset(self, type):
         if type == "bg":
-            self.project.delete_tileset("bg", self.ui)
             list = self.ui.bg_tileset_list
+            self.project.delete_tileset("bg", list.currentItem().text())
         elif type == "ob":
-            self.project.delete_tileset("ob", self.ui)
             list = self.ui.ob_tileset_list
+            self.project.delete_tileset("ob", list.currentItem().text())
         list.takeItem(list.currentRow())
         list.clearSelection()
         self.tileset_scene = TilesetScene(self.ui)
