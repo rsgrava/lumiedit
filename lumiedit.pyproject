@@ -9,6 +9,8 @@
         "palette_view.py",
         "tiledef.py",
         "tilemap.py",
-        "tile.py"
+        "tile.py",
+        "new_proj_window.ui",
+        "new_proj_window.py"
     ]
 }

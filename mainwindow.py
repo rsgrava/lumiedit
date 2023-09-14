@@ -5,6 +5,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox, QFileDialog, QGraphicsScene, QListWidgetItem
 
 from ui_main import Ui_MainWindow
+from new_proj_window import NewProjWindow
 from project import Project
 from tileset_scene import TilesetScene
 
@@ -32,15 +33,26 @@ class MainWindow(QMainWindow):
         self.ui.tileset_view.setScene(self.tileset_scene)
 
     def new_project(self):
-        name, ok = QInputDialog().getText(self, "Insert Project Name", "Project name:")
-        if ok and name:
+        try:
+            ok, name, dir = NewProjWindow().get_text()
+            if not ok:
+                return
             self.project = Project()
             self.project.new(name)
             self.ui.bg_tileset_list.clear()
             self.ui.ob_tileset_list.clear()
             self.setWindowTitle("lumiedit - " + name)
-            self.ui.project_label.setText("Current project: " + name)
+            self.ui.proj_name_label.setText("Current project: " + name)
+            self.ui.proj_dir_label.setText("Project directory: " + dir)
             self.enable_all_tabs()
+        except Exception as e:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText(str(e))
+            msg.setWindowTitle("Error")
+            msg.exec()
+
+
 
     def new_bg_tileset(self):
         filename = QFileDialog.getOpenFileName(caption="Open Tileset")[0]
