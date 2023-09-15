@@ -241,13 +241,18 @@ class MainWindow(QMainWindow):
         self.project.delete_map(self.ui.map_list.currentItem().text())
         self.ui.map_list.takeItem(self.ui.map_list.currentRow())
         self.ui.map_list.clearSelection()
+        self.tile_select_scene = TileSelectScene()
+        self.ui.tile_select_view.setScene(self.tile_select_scene)
 
     def select_map(self):
         self.tile_select_scene.clear()
         current_item = self.ui.map_list.currentItem()
         if current_item:
             tileset = self.project.maps[current_item.text()].tileset
-            self.tile_select_scene.setTileset(tileset, self.ui.tile_select_view.width())
+            self.tile_select_scene.setTileset(tileset)
+
+    def resizeEvent(self, event):
+        self.tile_select_scene.resize()
 
     def closeEvent(self, event):
         self.write_cfg()

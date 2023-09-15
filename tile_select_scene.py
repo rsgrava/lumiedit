@@ -13,7 +13,9 @@ class TileSelectScene(QGraphicsScene):
 
     def clear(self):
         super().clear()
+        self.selection_rect = QGraphicsRectItem(0, 0, 64, 64)
         self.tileset = None
+        self.metatile_idx = 0
 
     def mousePressEvent(self, event):
         if not self.tileset:
@@ -24,22 +26,21 @@ class TileSelectScene(QGraphicsScene):
             x = metatile_x * 64
             y = metatile_y * 64
             if (x < 0 or y < 0 or x > (self.width() - 64) or (y > self.height() - 64) or
-               (metatile_y == self.metatiles_y - 1 and metatile_x > self.metatiles_last_line - 1)):
+               (metatile_y == self.metatiles_y - 1 and
+                self.metatiles_last_line != 0 and metatile_x > self.metatiles_last_line - 1)):
                 return
-            self.selection_rect.setPos(x, y)
-            self.metatile = self.metatiles[metatile_x + self.metatiles_x  * metatile_y]
+            self.metatile_idx = metatile_x + self.metatiles_x * metatile_y
+            self.metatile = self.metatiles[self.metatile_idx]
+            self.set_selection(self.metatile_idx)
 
-    def setTileset(self, tileset, view_width):
+    def setTileset(self, tileset):
         self.tileset = tileset
         self.tilemap = Tilemap.from_tileset(tileset)
-        self.draw_pixmap(view_width)
-        pen = QPen("red")
-        pen.setWidth(4)
-        self.selection_rect = QGraphicsRectItem(0, 0, 64, 64)
-        self.selection_rect.setPen(pen)
-        self.addItem(self.selection_rect)
+        self.draw_pixmap()
+        self.set_selection(0)
 
-    def draw_pixmap(self, view_width):
+    def draw_pixmap(self):
+        view_width = self.views()[0].width()
         num_metatiles = (self.tileset.pixmap.width() // 16) * (self.tileset.pixmap.height() // 16)
         self.metatiles_x = view_width // 64
         self.metatiles_last_line = num_metatiles % self.metatiles_x
@@ -61,7 +62,7 @@ class TileSelectScene(QGraphicsScene):
         pixmap = QPixmap(width * 4, height * 4)
         painter = QPainter(pixmap)
         painter.setBrush(QBrush(QColor(255, 255, 255)))
-        painter.drawRect(0, 0, self.width(), self.height())
+        painter.drawRect(0, 0, self.views()[0].width(), self.views()[0].height())
         metatile_idx = 0
         for y in range(0, height, 16):
             for x in range(0, width, 16):
@@ -84,8 +85,21 @@ class TileSelectScene(QGraphicsScene):
                 self.addRect(x, y, 64, 64)
                 metatile_idx = metatile_idx + 1
 
-    def resizeEvent(self, event):
-        ...
+    def set_selection(self, metatile_idx):
+        if self.selection_rect in self.items():
+            self.removeItem(self.selection_rect)
+        x = (metatile_idx % self.metatiles_x) * 64
+        y = (metatile_idx // self.metatiles_x) * 64
+        pen = QPen("red")
+        pen.setWidth(4)
+        self.selection_rect = QGraphicsRectItem(x, y, 64, 64)
+        self.selection_rect.setPen(pen)
+        self.addItem(self.selection_rect)
+
+    def resize(self):
+        if self.tileset:
+            self.draw_pixmap()
+            self.set_selection(self.metatile_idx)
 
     def mirror_h(self):
         ...
