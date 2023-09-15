@@ -53,6 +53,8 @@ class MainWindow(QMainWindow):
         self.ui.delete_ob_tileset_btn.clicked.connect(self.delete_ob_tileset)
         self.ui.new_map_btn.clicked.connect(self.new_map)
         self.ui.delete_map_btn.clicked.connect(self.delete_map)
+        self.ui.hflip_box.toggled.connect(self.hflip_toggled)
+        self.ui.vflip_box.toggled.connect(self.vflip_toggled)
 
         self.ui.bg_tileset_list.currentRowChanged.connect(self.select_bg_tileset)
         self.ui.ob_tileset_list.currentRowChanged.connect(self.select_ob_tileset)
@@ -65,7 +67,7 @@ class MainWindow(QMainWindow):
         self.ui.tile_view.setScene(QGraphicsScene(0, 0, 64, 64))
         self.tileset_scene = TilesetScene(self.ui)
         self.ui.tileset_view.setScene(self.tileset_scene)
-        self.tile_select_scene = TileSelectScene()
+        self.tile_select_scene = TileSelectScene(self.ui.hflip_box, self.ui.vflip_box)
         self.ui.tile_select_view.setScene(self.tile_select_scene)
 
     def write_cfg(self):
@@ -241,7 +243,7 @@ class MainWindow(QMainWindow):
         self.project.delete_map(self.ui.map_list.currentItem().text())
         self.ui.map_list.takeItem(self.ui.map_list.currentRow())
         self.ui.map_list.clearSelection()
-        self.tile_select_scene = TileSelectScene()
+        self.tile_select_scene = TileSelectScene(self.ui.hflip_box, self.ui.vflip_box)
         self.ui.tile_select_view.setScene(self.tile_select_scene)
 
     def select_map(self):
@@ -251,8 +253,14 @@ class MainWindow(QMainWindow):
             tileset = self.project.maps[current_item.text()].tileset
             self.tile_select_scene.setTileset(tileset)
 
+    def hflip_toggled(self, checked):
+        self.tile_select_scene.refresh()
+
+    def vflip_toggled(self, checked):
+        self.tile_select_scene.refresh()
+
     def resizeEvent(self, event):
-        self.tile_select_scene.resize()
+        self.tile_select_scene.refresh()
 
     def closeEvent(self, event):
         self.write_cfg()

@@ -7,8 +7,10 @@ from PySide6.QtCore import Qt
 from tilemap import Tilemap
 
 class TileSelectScene(QGraphicsScene):
-    def __init__(self):
+    def __init__(self, hflip_box, vflip_box):
         super().__init__()
+        self.hflip_box = hflip_box
+        self.vflip_box = vflip_box
         self.clear()
 
     def clear(self):
@@ -69,10 +71,27 @@ class TileSelectScene(QGraphicsScene):
                 if metatile_idx == num_metatiles:
                     break
                 metatile = self.metatiles[metatile_idx]
-                painter.drawPixmap(x, y, self.tileset[metatile[0].id].pixmap)
-                painter.drawPixmap(x + 8, y, self.tileset[metatile[1].id].pixmap)
-                painter.drawPixmap(x, y + 8, self.tileset[metatile[2].id].pixmap)
-                painter.drawPixmap(x + 8, y + 8, self.tileset[metatile[3].id].pixmap)
+                match (self.hflip_box.isChecked(), self.vflip_box.isChecked()):
+                    case (False, False):
+                        painter.drawPixmap(x, y, self.tileset[metatile[0].id].pixmap)
+                        painter.drawPixmap(x + 8, y, self.tileset[metatile[1].id].pixmap)
+                        painter.drawPixmap(x, y + 8, self.tileset[metatile[2].id].pixmap)
+                        painter.drawPixmap(x + 8, y + 8, self.tileset[metatile[3].id].pixmap)
+                    case(True, False):
+                        painter.drawPixmap(x + 8, y, QPixmap.fromImage(self.tileset[metatile[0].id].pixmap.toImage().mirrored(True, False)))
+                        painter.drawPixmap(x, y, QPixmap.fromImage(self.tileset[metatile[1].id].pixmap.toImage().mirrored(True, False)))
+                        painter.drawPixmap(x + 8, y + 8, QPixmap.fromImage(self.tileset[metatile[2].id].pixmap.toImage().mirrored(True, False)))
+                        painter.drawPixmap(x, y + 8, QPixmap.fromImage(self.tileset[metatile[3].id].pixmap.toImage().mirrored(True, False)))
+                    case(False, True):
+                        painter.drawPixmap(x, y + 8, QPixmap.fromImage(self.tileset[metatile[0].id].pixmap.toImage().mirrored(False, True)))
+                        painter.drawPixmap(x + 8, y + 8, QPixmap.fromImage(self.tileset[metatile[1].id].pixmap.toImage().mirrored(False, True)))
+                        painter.drawPixmap(x, y, QPixmap.fromImage(self.tileset[metatile[2].id].pixmap.toImage().mirrored(False, True)))
+                        painter.drawPixmap(x + 8, y, QPixmap.fromImage(self.tileset[metatile[3].id].pixmap.toImage().mirrored(False, True)))
+                    case(True, True):
+                        painter.drawPixmap(x + 8, y + 8, QPixmap.fromImage(self.tileset[metatile[0].id].pixmap.toImage().mirrored(True, True)))
+                        painter.drawPixmap(x, y + 8, QPixmap.fromImage(self.tileset[metatile[1].id].pixmap.toImage().mirrored(True, True)))
+                        painter.drawPixmap(x + 8, y, QPixmap.fromImage(self.tileset[metatile[2].id].pixmap.toImage().mirrored(True, True)))
+                        painter.drawPixmap(x, y, QPixmap.fromImage(self.tileset[metatile[3].id].pixmap.toImage().mirrored(True, True)))
                 metatile_idx = metatile_idx + 1
         painter.end()
         item = self.addPixmap(pixmap)
@@ -96,13 +115,7 @@ class TileSelectScene(QGraphicsScene):
         self.selection_rect.setPen(pen)
         self.addItem(self.selection_rect)
 
-    def resize(self):
+    def refresh(self):
         if self.tileset:
             self.draw_pixmap()
             self.set_selection(self.metatile_idx)
-
-    def mirror_h(self):
-        ...
-
-    def mirror_v(self):
-        ...
