@@ -5,6 +5,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog, QGraphicsScene, QListWidgetItem
 
 from ui_main import Ui_MainWindow
+from map_editor import MapEditor
 from new_map_window import NewMapWindow
 from new_proj_window import NewProjWindow
 from project import Project
@@ -69,6 +70,8 @@ class MainWindow(QMainWindow):
         self.ui.tileset_view.setScene(self.tileset_scene)
         self.tile_select_scene = TileSelectScene(self.ui.hflip_box, self.ui.vflip_box)
         self.ui.tile_select_view.setScene(self.tile_select_scene)
+        self.map_editor = MapEditor(self.tile_select_scene, self.ui.hflip_box, self.ui.vflip_box)
+        self.ui.map_editor.setScene(self.map_editor)
 
     def write_cfg(self):
         open(os.path.expanduser("~/Documents/lumiedit/cfg.json"), "w").write(json.dumps(self.cfg))
@@ -245,13 +248,16 @@ class MainWindow(QMainWindow):
         self.ui.map_list.clearSelection()
         self.tile_select_scene = TileSelectScene(self.ui.hflip_box, self.ui.vflip_box)
         self.ui.tile_select_view.setScene(self.tile_select_scene)
+        self.map_editor.clear()
 
     def select_map(self):
         self.tile_select_scene.clear()
         current_item = self.ui.map_list.currentItem()
         if current_item:
-            tileset = self.project.maps[current_item.text()].tileset
-            self.tile_select_scene.setTileset(tileset)
+            map = self.project.maps[current_item.text()]
+            self.tile_select_scene.setTileset(map.tileset)
+            self.map_editor.set_map(map)
+
 
     def hflip_toggled(self, checked):
         self.tile_select_scene.refresh()
@@ -261,6 +267,7 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, event):
         self.tile_select_scene.refresh()
+        self.map_editor.refresh()
 
     def closeEvent(self, event):
         self.write_cfg()

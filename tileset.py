@@ -2,6 +2,7 @@
 
 from PySide6.QtGui import QPixmap
 
+from tile import Tile
 from tiledef import Tiledef
 
 class Tileset:
@@ -46,5 +47,14 @@ class Tileset:
         if len(self.palettes) > 8:
             raise Exception("More than 8 palettes in tileset!")
 
+
     def __getitem__(self, id):
         return self.tiledefs[id]
+
+    def first_metatile(self):
+        first_metatile = []
+        for y in range(0, 16, 8):
+            for x in range(0, 16, 8):
+                first_metatile.append(Tile.from_tileset(self, x, y))
+        return first_metatile
+

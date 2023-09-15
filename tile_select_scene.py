@@ -18,6 +18,8 @@ class TileSelectScene(QGraphicsScene):
         self.selection_rect = QGraphicsRectItem(0, 0, 64, 64)
         self.tileset = None
         self.metatile_idx = 0
+        self.metatiles = []
+        self.metatile = None
 
     def mousePressEvent(self, event):
         if not self.tileset:
@@ -52,8 +54,8 @@ class TileSelectScene(QGraphicsScene):
         self.setSceneRect(0, 0, view_width - view_width % 64, height * 4)
 
         self.metatiles = []
-        for y in range(0, len(self.tilemap), 2):
-            for x in range(0, len(self.tilemap[y]), 2):
+        for y in range(0, self.tilemap.height(), 2):
+            for x in range(0, self.tilemap.width(), 2):
                 metatile = []
                 metatile.append(self.tilemap[x][y])
                 metatile.append(self.tilemap[x + 1][y])
@@ -71,32 +73,44 @@ class TileSelectScene(QGraphicsScene):
                 if metatile_idx == num_metatiles:
                     break
                 metatile = self.metatiles[metatile_idx]
+                flip_h = self.hflip_box.isChecked()
+                flip_v = self.vflip_box.isChecked()
+                tile0 = self.tileset[metatile[0].id].pixmap.toImage()
+                tile1 = self.tileset[metatile[1].id].pixmap.toImage()
+                tile2 = self.tileset[metatile[2].id].pixmap.toImage()
+                tile3 = self.tileset[metatile[3].id].pixmap.toImage()
+                tile0 = QPixmap.fromImage(tile0.mirrored(flip_h != metatile[0].flip_h, flip_v != metatile[0].flip_v))
+                tile1 = QPixmap.fromImage(tile1.mirrored(flip_h != metatile[1].flip_h, flip_v != metatile[1].flip_v))
+                tile2 = QPixmap.fromImage(tile2.mirrored(flip_h != metatile[2].flip_h, flip_v != metatile[2].flip_v))
+                tile3 = QPixmap.fromImage(tile3.mirrored(flip_h != metatile[3].flip_h, flip_v != metatile[3].flip_v))
                 match (self.hflip_box.isChecked(), self.vflip_box.isChecked()):
                     case (False, False):
-                        painter.drawPixmap(x, y, self.tileset[metatile[0].id].pixmap)
-                        painter.drawPixmap(x + 8, y, self.tileset[metatile[1].id].pixmap)
-                        painter.drawPixmap(x, y + 8, self.tileset[metatile[2].id].pixmap)
-                        painter.drawPixmap(x + 8, y + 8, self.tileset[metatile[3].id].pixmap)
+                        painter.drawPixmap(x, y, tile0)
+                        painter.drawPixmap(x + 8, y, tile1)
+                        painter.drawPixmap(x, y + 8, tile2)
+                        painter.drawPixmap(x + 8, y + 8, tile3)
                     case(True, False):
-                        painter.drawPixmap(x + 8, y, QPixmap.fromImage(self.tileset[metatile[0].id].pixmap.toImage().mirrored(True, False)))
-                        painter.drawPixmap(x, y, QPixmap.fromImage(self.tileset[metatile[1].id].pixmap.toImage().mirrored(True, False)))
-                        painter.drawPixmap(x + 8, y + 8, QPixmap.fromImage(self.tileset[metatile[2].id].pixmap.toImage().mirrored(True, False)))
-                        painter.drawPixmap(x, y + 8, QPixmap.fromImage(self.tileset[metatile[3].id].pixmap.toImage().mirrored(True, False)))
+                        painter.drawPixmap(x + 8, y, tile0)
+                        painter.drawPixmap(x, y, tile1)
+                        painter.drawPixmap(x + 8, y + 8, tile2)
+                        painter.drawPixmap(x, y + 8, tile3)
                     case(False, True):
-                        painter.drawPixmap(x, y + 8, QPixmap.fromImage(self.tileset[metatile[0].id].pixmap.toImage().mirrored(False, True)))
-                        painter.drawPixmap(x + 8, y + 8, QPixmap.fromImage(self.tileset[metatile[1].id].pixmap.toImage().mirrored(False, True)))
-                        painter.drawPixmap(x, y, QPixmap.fromImage(self.tileset[metatile[2].id].pixmap.toImage().mirrored(False, True)))
-                        painter.drawPixmap(x + 8, y, QPixmap.fromImage(self.tileset[metatile[3].id].pixmap.toImage().mirrored(False, True)))
+                        painter.drawPixmap(x, y + 8, tile0)
+                        painter.drawPixmap(x + 8, y + 8, tile1)
+                        painter.drawPixmap(x, y, tile2)
+                        painter.drawPixmap(x + 8, y, tile3)
                     case(True, True):
-                        painter.drawPixmap(x + 8, y + 8, QPixmap.fromImage(self.tileset[metatile[0].id].pixmap.toImage().mirrored(True, True)))
-                        painter.drawPixmap(x, y + 8, QPixmap.fromImage(self.tileset[metatile[1].id].pixmap.toImage().mirrored(True, True)))
-                        painter.drawPixmap(x + 8, y, QPixmap.fromImage(self.tileset[metatile[2].id].pixmap.toImage().mirrored(True, True)))
-                        painter.drawPixmap(x, y, QPixmap.fromImage(self.tileset[metatile[3].id].pixmap.toImage().mirrored(True, True)))
+                        painter.drawPixmap(x + 8, y + 8, tile0)
+                        painter.drawPixmap(x, y + 8, tile1)
+                        painter.drawPixmap(x + 8, y, tile2)
+                        painter.drawPixmap(x, y, tile3)
                 metatile_idx = metatile_idx + 1
         painter.end()
         item = self.addPixmap(pixmap)
         item.setScale(4)
+        self.metatile = self.metatiles[self.metatile_idx]
 
+        metatile_idx = 0
         for y in range(0, height * 4, 64):
             for x in range(0, width * 4, 64):
                 if metatile_idx == num_metatiles:

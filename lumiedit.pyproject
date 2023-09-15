@@ -15,6 +15,7 @@
         "map.py",
         "new_map_window.ui",
         "new_map_window.py",
-        "tile_select_scene.py"
+        "tile_select_scene.py",
+        "map_editor.py"
     ]
 }

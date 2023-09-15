@@ -4,29 +4,30 @@ from tile import Tile
 from tiledef import Tiledef
 
 class Tilemap:
-    def __init__(self, width, height):
+    def __init__(self, width, height, default_metatile=None):
         self.tiles = [[Tile() for j in range(0, height)] for i in range(0, width)]
+        if default_metatile:
+            for x in range(0, len(self.tiles), 2):
+                for y in range(0, len(self.tiles), 2):
+                    self.tiles[x][y] = Tile.copy(default_metatile[0])
+                    self.tiles[x + 1][y] = Tile.copy(default_metatile[1])
+                    self.tiles[x][y + 1] = Tile.copy(default_metatile[2])
+                    self.tiles[x + 1][y + 1] = Tile.copy(default_metatile[3])
+
 
     def __getitem__(self, idx):
         return self.tiles[idx]
 
-    def __len__(self):
+    def width(self):
         return len(self.tiles)
+
+    def height(self):
+        return len(self.tiles[0])
 
     @classmethod
     def from_tileset(cls, tileset):
         tilemap = Tilemap(tileset.pixmap.width() // 8, tileset.pixmap.height() // 8)
         for y in range(0, tileset.pixmap.height(), 8):
             for x in range(0, tileset.pixmap.width(), 8):
-                tiledef = Tiledef(tileset.pixmap.copy(x, y, 8, 8))
-                for i in range(0, len(tileset.tiledefs)):
-                    if tiledef == tileset.tiledefs[i]:
-                        mirrored = tiledef.is_mirror(tileset.tiledefs[i])
-                        palette = tiledef.get_palette()
-                        for j in range(0, len(tileset.palettes)):
-                            if all(color in tileset.palettes[j] for color in palette):
-                                palette = j
-                                break
-                        tilemap[x // 8][y // 8] = Tile(i, palette, mirrored[0], mirrored[1])
-                        break
+                tilemap[x // 8][y // 8] = Tile.from_tileset(tileset, x, y)
         return tilemap
