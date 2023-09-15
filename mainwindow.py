@@ -2,12 +2,13 @@
 import sys, os, json
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox, QFileDialog, QGraphicsScene, QListWidgetItem
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog, QGraphicsScene, QListWidgetItem
 
 from ui_main import Ui_MainWindow
 from new_map_window import NewMapWindow
 from new_proj_window import NewProjWindow
 from project import Project
+from tile_select_scene import TileSelectScene
 from tileset_scene import TilesetScene
 
 class MainWindow(QMainWindow):
@@ -64,6 +65,8 @@ class MainWindow(QMainWindow):
         self.ui.tile_view.setScene(QGraphicsScene(0, 0, 64, 64))
         self.tileset_scene = TilesetScene(self.ui)
         self.ui.tileset_view.setScene(self.tileset_scene)
+        self.tile_select_scene = TileSelectScene()
+        self.ui.tile_select_view.setScene(self.tile_select_scene)
 
     def write_cfg(self):
         open(os.path.expanduser("~/Documents/lumiedit/cfg.json"), "w").write(json.dumps(self.cfg))
@@ -232,7 +235,6 @@ class MainWindow(QMainWindow):
         self.project.rename_map(item)
         self.ui.map_list.blockSignals(False)
 
-
     def delete_map(self):
         if self.ui.map_list.currentItem() == None:
             return
@@ -241,7 +243,11 @@ class MainWindow(QMainWindow):
         self.ui.map_list.clearSelection()
 
     def select_map(self):
-        ...
+        self.tile_select_scene.clear()
+        current_item = self.ui.map_list.currentItem()
+        if current_item:
+            tileset = self.project.maps[current_item.text()].tileset
+            self.tile_select_scene.setTileset(tileset, self.ui.tile_select_view.width())
 
     def closeEvent(self, event):
         self.write_cfg()

@@ -45,3 +45,6 @@ class Tileset:
             palette.pad()
         if len(self.palettes) > 8:
             raise Exception("More than 8 palettes in tileset!")
+
+    def __getitem__(self, id):
+        return self.tiledefs[id]

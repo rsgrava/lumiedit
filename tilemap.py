@@ -10,6 +10,9 @@ class Tilemap:
     def __getitem__(self, idx):
         return self.tiles[idx]
 
+    def __len__(self):
+        return len(self.tiles)
+
     @classmethod
     def from_tileset(cls, tileset):
         tilemap = Tilemap(tileset.pixmap.width() // 8, tileset.pixmap.height() // 8)
