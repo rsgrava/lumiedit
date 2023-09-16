@@ -170,16 +170,23 @@ class MainWindow(QMainWindow):
         self.ui.ob_tileset_list.blockSignals(False)
 
     def delete_tileset(self, type):
-        if type == "bg":
-            list = self.ui.bg_tileset_list
-            self.project.delete_tileset("bg", list.currentItem().text())
-        elif type == "ob":
-            list = self.ui.ob_tileset_list
-            self.project.delete_tileset("ob", list.currentItem().text())
-        list.takeItem(list.currentRow())
-        list.clearSelection()
-        self.tileset_scene = TilesetScene(self.ui)
-        self.ui.tileset_view.setScene(self.tileset_scene)
+        try:
+            if type == "bg":
+                list = self.ui.bg_tileset_list
+                self.project.delete_tileset("bg", list.currentItem().text())
+            elif type == "ob":
+                list = self.ui.ob_tileset_list
+                self.project.delete_tileset("ob", list.currentItem().text())
+            list.takeItem(list.currentRow())
+            list.clearSelection()
+            self.tileset_scene = TilesetScene(self.ui)
+            self.ui.tileset_view.setScene(self.tileset_scene)
+        except Exception as e:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText(str(e))
+            msg.setWindowTitle("Error")
+            msg.exec()
 
     def delete_bg_tileset(self):
         if self.ui.bg_tileset_list.currentItem() == None:
