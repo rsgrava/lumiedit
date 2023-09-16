@@ -47,6 +47,13 @@ class Project:
             item.setFlags(item.flags() | Qt.ItemIsEditable)
             ui.ob_tileset_list.addItem(item)
 
+        for name in data["maps"]:
+            tileset = self.bg_tilesets[data["maps"][name]["tileset"]]
+            self.maps[name] = Map(tileset, tilemap=data["maps"][name]["tilemap"])
+            item = QListWidgetItem(name)
+            item.setFlags(item.flags() | Qt.ItemIsEditable)
+            ui.map_list.addItem(item)
+
         self.initialized = True
         self.unsaved_changes = False
 
@@ -68,6 +75,16 @@ class Project:
         data["ob_tilesets"] = {}
         data["ob_tilesets"]["names"] = list(self.ob_tilesets.keys())
         data["ob_tilesets"]["filenames"] = filenames
+
+        maps = {}
+        for map in self.maps:
+            maps[map] = self.maps[map].to_dict()
+            for tileset in self.bg_tilesets:
+                if self.bg_tilesets[tileset] == self.maps[map].tileset:
+                    name = tileset
+                    break
+            maps[map]["tileset"] = name
+        data["maps"] = maps
 
         open(self.dir + "/project.json", "w").write(json.dumps(data))
         self.unsaved_changes = False

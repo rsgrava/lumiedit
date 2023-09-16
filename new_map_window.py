@@ -20,7 +20,7 @@ class NewMapWindow(QDialog):
         name = self.ui.name_edit.text()
         tileset = self.ui.tilesets_combo.currentText()
         width = self.ui.width_edit.text()
-        height = self.ui.width_edit.text()
+        height = self.ui.height_edit.text()
         if not name:
             raise Exception("Please input a name!")
         if not tileset:

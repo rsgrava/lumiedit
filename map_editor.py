@@ -114,7 +114,7 @@ class MapEditor(QGraphicsScene):
 
     def set_map(self, map):
         self.map = map
-        self.draw_map()
+        self.refresh()
 
     def draw_map(self):
         self.setSceneRect(0, 0, self.map.width() * 32, self.map.height() * 32)
@@ -130,4 +130,5 @@ class MapEditor(QGraphicsScene):
 
     def refresh(self):
         if self.map:
+            super().clear()
             self.draw_map()

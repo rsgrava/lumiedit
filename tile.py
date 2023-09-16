@@ -23,5 +23,17 @@ class Tile:
                 return Tile(i, palette, mirrored[0], mirrored[1])
 
     @classmethod
+    def from_dict(self, dct):
+        return Tile(dct["id"], dct["palette"], dct["flip_h"], dct["flip_v"])
+
+    def to_dict(self):
+        return {
+                   "id": self.id,
+                   "palette": self.palette,
+                   "flip_h": self.flip_h,
+                   "flip_v": self.flip_v,
+               }
+
+    @classmethod
     def copy(cls, tile):
         return Tile(tile.id, tile.palette, tile.flip_h, tile.flip_v)
