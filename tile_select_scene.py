@@ -63,7 +63,7 @@ class TileSelectScene(QGraphicsScene):
                 metatile.append(self.tilemap[x + 1][y + 1])
                 self.metatiles.append(metatile)
 
-        pixmap = QPixmap(width * 4, height * 4)
+        pixmap = QPixmap(width, height)
         painter = QPainter(pixmap)
         painter.setBrush(QBrush(QColor(255, 255, 255)))
         painter.drawRect(0, 0, self.views()[0].width(), self.views()[0].height())
@@ -131,5 +131,6 @@ class TileSelectScene(QGraphicsScene):
 
     def refresh(self):
         if self.tileset:
+            super().clear()
             self.draw_pixmap()
             self.set_selection(self.metatile_idx)
