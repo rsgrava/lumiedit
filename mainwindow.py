@@ -255,9 +255,8 @@ class MainWindow(QMainWindow):
         current_item = self.ui.map_list.currentItem()
         if current_item:
             map = self.project.maps[current_item.text()]
-            self.tile_select_scene.setTileset(map.tileset)
+            self.tile_select_scene.set_tileset(map.tileset)
             self.map_editor.set_map(map)
-
 
     def hflip_toggled(self, checked):
         self.tile_select_scene.refresh()

@@ -37,7 +37,7 @@ class TileSelectScene(QGraphicsScene):
             self.metatile = self.metatiles[self.metatile_idx]
             self.set_selection(self.metatile_idx)
 
-    def setTileset(self, tileset):
+    def set_tileset(self, tileset):
         self.tileset = tileset
         self.tilemap = Tilemap.from_tileset(tileset)
         self.draw_pixmap()
