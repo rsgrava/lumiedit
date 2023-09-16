@@ -127,6 +127,9 @@ class MapEditor(QGraphicsScene):
                 item = self.addPixmap(QPixmap.fromImage(tiledef.pixmap.toImage().mirrored(tile.flip_h, tile.flip_v)))
                 item.setPos(x, y)
                 item.setScale(4)
+        for y in range(0, self.map.height() * 32, 64):
+            for x in range(0, self.map.width() * 32, 64):
+                self.addRect(x, y, 64, 64)
 
     def refresh(self):
         if self.map:
