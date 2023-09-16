@@ -243,12 +243,20 @@ class MainWindow(QMainWindow):
     def delete_map(self):
         if self.ui.map_list.currentItem() == None:
             return
-        self.project.delete_map(self.ui.map_list.currentItem().text())
-        self.ui.map_list.takeItem(self.ui.map_list.currentRow())
-        self.ui.map_list.clearSelection()
-        self.tile_select_scene = TileSelectScene(self.ui.hflip_box, self.ui.vflip_box)
-        self.ui.tile_select_view.setScene(self.tile_select_scene)
-        self.map_editor.clear()
+        result = QMessageBox.question(
+            None,
+            "Confirmation",
+            "Are you sure you want to delete this map?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        if result == QMessageBox.Yes:
+            self.project.delete_map(self.ui.map_list.currentItem().text())
+            self.ui.map_list.takeItem(self.ui.map_list.currentRow())
+            self.ui.map_list.clearSelection()
+            self.tile_select_scene = TileSelectScene(self.ui.hflip_box, self.ui.vflip_box)
+            self.ui.tile_select_view.setScene(self.tile_select_scene)
+            self.map_editor.clear()
 
     def select_map(self):
         self.tile_select_scene.clear()
