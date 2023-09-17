@@ -48,6 +48,7 @@ class MainWindow(QMainWindow):
         self.ui.new_project_btn.clicked.connect(self.new_project)
         self.ui.load_project_btn.clicked.connect(self.load_project)
         self.ui.save_project_btn.clicked.connect(self.save_project)
+        self.ui.compile_project_btn.clicked.connect(self.compile_project)
         self.ui.new_bg_tileset_btn.clicked.connect(self.new_bg_tileset)
         self.ui.new_ob_tileset_btn.clicked.connect(self.new_ob_tileset)
         self.ui.delete_bg_tileset_btn.clicked.connect(self.delete_bg_tileset)
@@ -130,6 +131,21 @@ class MainWindow(QMainWindow):
                 msg.setText("Failed to save project!\n\n" + str(e))
                 msg.setWindowTitle("Error")
                 msg.exec()
+
+    def compile_project(self):
+        try:
+            self.project.compile()
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setText("Project compiled successfully.")
+            msg.setWindowTitle("Success")
+            msg.exec()
+        except Exception as e:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText("Failed to save project!\n\n" + str(e))
+            msg.setWindowTitle("Error")
+            msg.exec()
 
     def new_tileset(self, type):
         if type == "bg":

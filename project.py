@@ -89,6 +89,38 @@ class Project:
         open(self.dir + "/project.json", "w").write(json.dumps(data))
         self.unsaved_changes = False
 
+    def compile(self):
+        bin_files = {}
+        inc_files = {}
+
+        tilesets_string = ""
+        bg_palettes_string = ""
+        tilesets_bin = {}
+        bg_palettes_bin = {}
+        for tileset in self.bg_tilesets:
+            tiledefs, palettes = self.bg_tilesets[tileset].to_bytearray()
+            tilesets_bin[tileset] = tiledefs
+            bg_palettes_bin[tileset] = palettes
+            tilesets_string += "section \"tileset_" + tileset + "\", romx, align[4]\n"
+            tilesets_string += "    incbin \"maps/" + tileset + ".bin\"\n\n"
+            bg_palettes_string += "section \"tileset_" + tileset + "_palettes\", romx\n"
+            bg_palettes_string += "    incbin \"bg_palettes/" + tileset + ".bin\"\n\n"
+        inc_files["tilesets"] = tilesets_string
+        inc_files["palettes"] = bg_palettes_string
+        bin_files["tilesets"] = tilesets_bin
+        bin_files["bg_palettes"] = bg_palettes_bin
+
+        os.makedirs(self.dir + "/out/bin", exist_ok=True)
+        os.makedirs(self.dir + "/out/inc", exist_ok=True)
+        for filename, string in inc_files.items():
+            with open(self.dir + "/out/inc/" + filename + ".inc", "w") as file:
+                file.write(string)
+        for folder in bin_files:
+            os.makedirs(self.dir + "/out/bin/" + folder, exist_ok=True)
+            for filename, bytes in bin_files[folder].items():
+                with open(self.dir + "/out/bin/" + folder + "/" + filename + ".bin", "wb") as file:
+                    file.write(bytes)
+
     def new_tileset(self, type, name, filename):
         if type == "bg":
             list = self.bg_tilesets

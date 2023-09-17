@@ -21,6 +21,17 @@ class Palette:
     def __len__(self):
         return len(self.rgb)
 
+    def is_subpalette(self, other):
+        return all(color in other for color in self)
+
+    def to_bytearray(self):
+        bytes = bytearray()
+        for color in self.gb:
+            color_bytes = color[0] | color[1] << 5 | color[2] << 10
+            bytes.append(color_bytes & 0xFF)
+            bytes.append(color_bytes >> 8)
+        return bytes
+
     def append(self, color):
         self.rgb.append(color)
         self.gb.append(rgb_to_gb(color))

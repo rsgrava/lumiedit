@@ -37,7 +37,7 @@ class Tileset:
                 for j in range(0, len(self.palettes)):
                     if i == j:
                         continue
-                    if all(color in self.palettes[j] for color in self.palettes[i]):
+                    if self.palettes[i].is_subpalette(self.palettes[j]):
                         subpalettes.append(self.palettes[i])
         for subpalette in subpalettes:
             if subpalette in self.palettes:
@@ -47,6 +47,13 @@ class Tileset:
         if len(self.palettes) > 8:
             raise Exception("More than 8 palettes in tileset!")
 
+        self.def_palettes = []
+        for tiledef in self.tiledefs:
+            palette = tiledef.get_palette()
+            for other in self.palettes:
+                if palette.is_subpalette(other):
+                    self.def_palettes.append(other)
+                    break
 
     def __getitem__(self, id):
         return self.tiledefs[id]
@@ -58,3 +65,12 @@ class Tileset:
                 first_metatile.append(Tile.from_tileset(self, x, y))
         return first_metatile
 
+    def to_bytearray(self):
+        tiledefs = bytearray()
+        for tiledef, palette in zip(self.tiledefs, self.def_palettes):
+            tiledefs += tiledef.to_bytearray(palette)
+        palettes = bytearray()
+        for palette in self.palettes:
+            palettes += palette.to_bytearray()
+        palettes = palettes + bytearray([0] * (64 - len(palettes)))
+        return tiledefs, palettes

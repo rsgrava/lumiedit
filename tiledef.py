@@ -10,6 +10,30 @@ class Tiledef:
         mirrored = self.is_mirror(other)
         return self.pixmap.toImage() == other.pixmap.toImage() or mirrored[0] or mirrored[1]
 
+    def to_bytearray(self, palette):
+        image = self.pixmap.toImage()
+        bytes = bytearray()
+        pixel_ids = []
+        for y in range(0, self.pixmap.width()):
+            for x in range(0, self.pixmap.height()):
+                color = image.pixelColor(x, y)
+                for i in range(0, len(palette)):
+                    if palette[i] == color:
+                        pixel_ids.append(i)
+                        break
+        for row in range(0, 8):
+            lo_byte = 0
+            hi_byte = 0
+            ids = pixel_ids[row * 8:row * 8 + 8]
+            for id in ids:
+                lo_byte <<= 1
+                hi_byte <<= 1
+                lo_byte |= id % 2
+                hi_byte |= id // 2
+            bytes.append(lo_byte)
+            bytes.append(hi_byte)
+        return bytes
+
     def is_mirror(self, other):
         image1 = self.pixmap.toImage()
         image2 = other.pixmap.toImage()
