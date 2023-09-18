@@ -203,13 +203,12 @@ class Project:
 
     def delete_tileset(self, type, name):
         if type == "bg":
-            tileset = self.bg_tilesets[name]
+            for map in self.maps:
+                if self.maps[map].tileset == self.bg_tilesets[name]:
+                    raise Exception("Cannot delete tileset: used in map '" + map + "'")
+            del self.bg_tilesets[name]
         elif type == "ob":
-            tileset = self.ob_tilesets[name]
-        for map in self.maps:
-            if self.maps[map].tileset == tileset:
-                raise Exception("Cannot delete tileset: used in map '" + map + "'")
-        del tileset
+            del self.ob_tilesets[name]
         self.unsaved_changes = True
 
     def new_map(self, name, tileset, width, height):
