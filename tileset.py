@@ -22,9 +22,9 @@ class Tileset:
                 tiledef = Tiledef(self.pixmap.copy(x, y, 8, 8))
                 if tiledef not in self.tiledefs:
                     self.tiledefs.append(tiledef)
-                if i > 256:
-                    raise Exception("Too many tiles! (max 256)")
-                i = i + 1
+                    i = i + 1
+                if i > 384:
+                    raise Exception("Too many tiles! (max 384)")
 
         self.palettes = []
         for tile in self.tiledefs:
