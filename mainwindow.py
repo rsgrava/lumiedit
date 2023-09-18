@@ -277,8 +277,7 @@ class MainWindow(QMainWindow):
             self.project.delete_map(self.ui.map_list.currentItem().text())
             self.ui.map_list.takeItem(self.ui.map_list.currentRow())
             self.ui.map_list.clearSelection()
-            self.tile_select_scene = TileSelectScene(self.ui.hflip_box, self.ui.vflip_box)
-            self.ui.tile_select_view.setScene(self.tile_select_scene)
+            self.tile_select_scene.clear()
             self.map_editor.clear()
 
     def select_map(self):
