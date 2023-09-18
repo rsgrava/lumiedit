@@ -13,6 +13,9 @@ class Map:
     def __getitem__(self, idx):
         return self.tilemap[idx]
 
+    def to_bytearray(self):
+        return self.tilemap.to_bytearray()
+
     def to_dict(self):
         return {
                     "tilemap": self.tilemap.to_dict(),

@@ -32,6 +32,20 @@ class Tilemap:
                 tilemap[x][y] = Tile.from_dict(lst[x][y])
         return tilemap
 
+    def to_bytearray(self):
+        ids = bytearray()
+        attribs = bytearray()
+        for y in range(0, self.height()):
+            for x in range(0, self.width()):
+                tile = self.tiles[x][y]
+                attrib = 0
+                attrib |= tile.palette
+                attrib |= 0x20 if tile.flip_h else 0x00
+                attrib |= 0x40 if tile.flip_v else 0x00
+                ids.append(tile.id)
+                attribs.append(attrib)
+        return ids, attribs
+
     def to_dict(self):
         tiles = []
         for x in range(0, len(self.tiles)):

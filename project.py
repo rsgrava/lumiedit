@@ -102,15 +102,67 @@ class Project:
             tilesets_bin[tileset] = tiledefs
             bg_palettes_bin[tileset] = palettes
             tilesets_string += "section \"tileset_" + tileset + "\", romx, align[4]\n"
-            tilesets_string += "    incbin \"maps/" + tileset + ".bin\"\n\n"
-            bg_palettes_string += "section \"tileset_" + tileset + "_palettes\", romx\n"
+            tilesets_string += "    incbin \"tilesets/" + tileset + ".bin\"\n\n"
+            bg_palettes_string += "section \"bg_palettes_" + tileset + "\", romx\n"
             bg_palettes_string += "    incbin \"bg_palettes/" + tileset + ".bin\"\n\n"
         inc_files["tilesets"] = tilesets_string
-        inc_files["palettes"] = bg_palettes_string
+        inc_files["bg_palettes"] = bg_palettes_string
         bin_files["tilesets"] = tilesets_bin
         bin_files["bg_palettes"] = bg_palettes_bin
 
-        os.makedirs(self.dir + "/out/bin", exist_ok=True)
+
+        map_tiles_bin = {}
+        map_attribs_bin = {}
+        map_tiles_string = ""
+        map_attribs_string = ""
+        map_table_string = ""
+        map_table_string += "if !def(MAPS_LOADED)\n"
+        map_table_string += "    def MAPS_LOADED equ 1\n"
+        map_table_string += "    include \"map_tiles.inc\"\n"
+        map_table_string += "    include \"map_attribs.inc\"\n"
+        map_table_string += "    include \"tilesets.inc\"\n"
+        map_table_string += "    include \"bg_palettes.inc\"\n"
+        map_table_string += "endc\n"
+        map_table_string += "\n"
+        map_table_string += "section \"map_table\", rom0\n"
+        for map in self.maps:
+            tile_ids, tile_attribs = self.maps[map].to_bytearray()
+            map_tiles_bin[map] = tile_ids
+            map_attribs_bin[map] = tile_attribs
+            for tileset in self.bg_tilesets:
+                if self.bg_tilesets[tileset] == self.maps[map].tileset:
+                    tileset_name = tileset
+
+            map_tiles_string += "section \"map_tiles_" + map + "\", romx, align[4]\n"
+            map_tiles_string += "    incbin \"map_tiles/" + map + ".bin\"\n\n"
+
+            map_attribs_string += "section \"map_attribs_" + map + "\", romx, align[4]\n"
+            map_attribs_string += "    incbin \"map_attribs/" + map + ".bin\"\n\n"
+
+            map_table_string += "    " + map + ":\n"
+
+            map_table_string += "        " + "db " + str(self.maps[map].width()) + "\n"
+            map_table_string += "        " + "db " + str(self.maps[map].height()) + "\n"
+            map_table_string += "        " + "dw " + str(self.maps[map].width() * self.maps[map].height()) + "\n"
+
+            map_table_string += "        " + "dw bank(\"map_tiles_" + map + "\")\n"
+            map_table_string += "        " + "dw startof(\"map_tiles_" + map + "\")\n"
+
+            map_table_string += "        " + "dw bank(\"map_attribs_" + map + "\")\n"
+            map_table_string += "        " + "dw startof(\"map_attribs_" + map + "\")\n"
+
+            map_table_string += "        " + "dw bank(\"tileset_" + tileset_name + "\")\n"
+            map_table_string += "        " + "dw startof(\"tileset_" + tileset_name + "\")\n"
+
+            map_table_string += "        " + "dw bank(\"bg_palettes_" + tileset_name + "\")\n"
+            map_table_string += "        " + "dw startof(\"bg_palettes_" + tileset_name + "\")\n"
+
+        inc_files["map_tiles"] = map_tiles_string
+        inc_files["map_attribs"] = map_attribs_string
+        inc_files["map_table"] = map_table_string
+        bin_files["map_tiles"] = map_tiles_bin
+        bin_files["map_attribs"] = map_attribs_bin
+
         os.makedirs(self.dir + "/out/inc", exist_ok=True)
         for filename, string in inc_files.items():
             with open(self.dir + "/out/inc/" + filename + ".inc", "w") as file:
