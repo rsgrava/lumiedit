@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>474</width>
-    <height>163</height>
+    <height>238</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,6 +41,30 @@
      </item>
      <item>
       <widget class="QPushButton" name="dir_btn">
+       <property name="text">
+        <string>Choose</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Output Directory</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLineEdit" name="output_dir_edit"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="output_dir_btn">
        <property name="text">
         <string>Choose</string>
        </property>

@@ -12,6 +12,7 @@ class Project:
     def __init__(self):
         self.name = None
         self.dir = None
+        self.output_dir = None
         self.initialized = False
         self.unsaved_changes = False
         self.data = {}
@@ -19,9 +20,10 @@ class Project:
         self.ob_tilesets = {}
         self.maps = {}
 
-    def new(self, name, dir):
+    def new(self, name, dir, output_dir):
         self.name = name
         self.dir = dir
+        self.output_dir = output_dir
         self.initialized = True
         self.unsaved_changes = False
         os.makedirs(self.dir + "/tilesets/bg")
@@ -33,6 +35,7 @@ class Project:
         data = json.loads(open(dir + "/project.json", "r").read())
 
         self.name = data["name"]
+        self.output_dir = data["output_dir"]
         self.dir = dir
 
         for name, filename in zip(data["bg_tilesets"]["names"], data["bg_tilesets"]["filenames"]):
@@ -61,6 +64,7 @@ class Project:
         data = {}
 
         data["name"] = self.name
+        data["output_dir"] = self.output_dir
 
         filenames = []
         for bg in self.bg_tilesets:
@@ -88,6 +92,10 @@ class Project:
 
         open(self.dir + "/project.json", "w").write(json.dumps(data))
         self.unsaved_changes = False
+
+    def set_output_dir(self, dir):
+        self.output_dir = dir
+        self.unsaved_changes = True
 
     def compile(self):
         bin_files = {}
@@ -163,14 +171,14 @@ class Project:
         bin_files["map_tiles"] = map_tiles_bin
         bin_files["map_attribs"] = map_attribs_bin
 
-        os.makedirs(self.dir + "/out/inc", exist_ok=True)
+        os.makedirs(self.output_dir + "/inc", exist_ok=True)
         for filename, string in inc_files.items():
-            with open(self.dir + "/out/inc/" + filename + ".inc", "w") as file:
+            with open(self.output_dir + "/inc/" + filename + ".inc", "w") as file:
                 file.write(string)
         for folder in bin_files:
-            os.makedirs(self.dir + "/out/bin/" + folder, exist_ok=True)
+            os.makedirs(self.output_dir + "/bin/" + folder, exist_ok=True)
             for filename, bytes in bin_files[folder].items():
-                with open(self.dir + "/out/bin/" + folder + "/" + filename + ".bin", "wb") as file:
+                with open(self.output_dir + "/bin/" + folder + "/" + filename + ".bin", "wb") as file:
                     file.write(bytes)
 
     def new_tileset(self, type, name, filename):

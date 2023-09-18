@@ -49,10 +49,13 @@ class MainWindow(QMainWindow):
         self.ui.load_project_btn.clicked.connect(self.load_project)
         self.ui.save_project_btn.clicked.connect(self.save_project)
         self.ui.compile_project_btn.clicked.connect(self.compile_project)
+        self.ui.set_output_dir_btn.clicked.connect(self.set_output_dir)
+
         self.ui.new_bg_tileset_btn.clicked.connect(self.new_bg_tileset)
         self.ui.new_ob_tileset_btn.clicked.connect(self.new_ob_tileset)
         self.ui.delete_bg_tileset_btn.clicked.connect(self.delete_bg_tileset)
         self.ui.delete_ob_tileset_btn.clicked.connect(self.delete_ob_tileset)
+
         self.ui.new_map_btn.clicked.connect(self.new_map)
         self.ui.delete_map_btn.clicked.connect(self.delete_map)
         self.ui.hflip_box.toggled.connect(self.hflip_toggled)
@@ -81,6 +84,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("lumiedit - " + self.project.name)
         self.ui.proj_name_label.setText("Current project: " + self.project.name)
         self.ui.proj_dir_label.setText("Project directory: " + self.project.dir)
+        self.ui.output_dir_label.setText("Output directory: " + self.project.output_dir)
 
     def clear_project(self):
         self.ui.bg_tileset_list.clear()
@@ -89,11 +93,11 @@ class MainWindow(QMainWindow):
 
     def new_project(self):
         try:
-            ok, name, dir = NewProjWindow().get_text()
+            ok, name, dir, output_dir = NewProjWindow().get_text()
             if not ok:
                 return
             self.project = Project()
-            self.project.new(name, dir)
+            self.project.new(name, dir, output_dir)
             self.cfg["last_project"] = dir
             self.clear_project()
             self.set_proj_labels()
@@ -146,6 +150,11 @@ class MainWindow(QMainWindow):
             msg.setText("Failed to save project!\n\n" + str(e))
             msg.setWindowTitle("Error")
             msg.exec()
+
+    def set_output_dir(self):
+        dir = QFileDialog().getExistingDirectory(self, "Choose Directory", self.project.output_dir, QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+        self.project.set_output_dir(dir)
+        self.set_proj_labels()
 
     def new_tileset(self, type):
         if type == "bg":
