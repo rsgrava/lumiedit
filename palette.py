@@ -13,13 +13,24 @@ class Palette:
     def __eq__(self, other):
         if len(self) != len(other):
             return False
-        return all(color in other.gb for color in self.gb)
+        for color1, color2 in zip(self.gb, other.gb):
+            if color1 != color2:
+                return False
+        return True
 
     def __getitem__(self, idx):
         return self.rgb[idx]
 
     def __len__(self):
         return len(self.rgb)
+
+    def get_idx(self, color):
+        gb_color = rgb_to_gb(color)
+        print(gb_color)
+        for i in range(0, len(self.gb)):
+            print(self.gb[i])
+            if gb_color == self.gb[i]:
+                return i
 
     def is_subpalette(self, other):
         return all(color in other for color in self)

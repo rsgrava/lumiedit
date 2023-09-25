@@ -58,6 +58,9 @@ class Tileset:
     def __getitem__(self, id):
         return self.tiledefs[id]
 
+    def __len__(self):
+        return len(self.tiledefs)
+
     def first_metatile(self):
         first_metatile = []
         for y in range(0, 16, 8):

@@ -17,10 +17,7 @@ class Tiledef:
         for y in range(0, self.pixmap.width()):
             for x in range(0, self.pixmap.height()):
                 color = image.pixelColor(x, y)
-                for i in range(0, len(palette)):
-                    if palette[i] == color:
-                        pixel_ids.append(i)
-                        break
+                pixel_ids.append(palette.get_idx(color))
         for row in range(0, 8):
             lo_byte = 0
             hi_byte = 0

@@ -42,7 +42,8 @@ class Tilemap:
                 attrib |= tile.palette
                 attrib |= 0x20 if tile.flip_h else 0x00
                 attrib |= 0x40 if tile.flip_v else 0x00
-                ids.append(tile.id)
+                attrib |= 0x08 if tile.id >= 256 else 0x00
+                ids.append(tile.id if tile.id < 256 else tile.id - 256)
                 attribs.append(attrib)
         return ids, attribs
 
