@@ -33,6 +33,8 @@ class Palette:
         return bytes
 
     def append(self, color):
+        if len(self.rgb) >= 4:
+            raise Exception("Palette with more than 4 colors!")
         self.rgb.append(color)
         self.gb.append(rgb_to_gb(color))
 
