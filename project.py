@@ -118,7 +118,6 @@ class Project:
         bin_files["tilesets"] = tilesets_bin
         bin_files["bg_palettes"] = bg_palettes_bin
 
-
         map_tiles_bin = {}
         map_attribs_bin = {}
         map_tiles_string = ""
@@ -140,6 +139,7 @@ class Project:
             for tileset in self.bg_tilesets:
                 if self.bg_tilesets[tileset] == self.maps[map].tileset:
                     tileset_name = tileset
+            num_tiledefs = len(self.bg_tilesets[tileset_name])
 
             map_tiles_string += "section \"map_tiles_" + map + "\", romx, align[4]\n"
             map_tiles_string += "    incbin \"map_tiles/" + map + ".bin\"\n\n"
@@ -161,6 +161,9 @@ class Project:
 
             map_table_string += "        " + "dw bank(\"tileset_" + tileset_name + "\")\n"
             map_table_string += "        " + "dw startof(\"tileset_" + tileset_name + "\")\n"
+            map_table_string += "        " + "db " + str(min(num_tiledefs, 128)) + "\n"
+            map_table_string += "        " + "db " + str(min(max(num_tiledefs - 128, 0), 128)) + "\n"
+            map_table_string += "        " + "db " + str(max(num_tiledefs - 256, 0)) + "\n"
 
             map_table_string += "        " + "dw bank(\"bg_palettes_" + tileset_name + "\")\n"
             map_table_string += "        " + "dw startof(\"bg_palettes_" + tileset_name + "\")\n"
